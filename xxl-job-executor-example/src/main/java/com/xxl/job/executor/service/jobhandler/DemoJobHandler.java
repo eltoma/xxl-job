@@ -21,7 +21,7 @@ import com.xxl.job.core.handler.annotation.JobHander;
  * @author xuxueli 2015-12-19 19:43:36
  */
 @JobHander("demoJobHandler")
-public class DemoJobHandler implements IJobHandler {
+public class DemoJobHandler extends IJobHandler {
     private static transient Logger logger = LoggerFactory.getLogger(DemoJobHandler.class);
 
     @Override
