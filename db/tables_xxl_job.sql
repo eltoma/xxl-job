@@ -157,7 +157,7 @@ CREATE TABLE `xxl_job_qrtz_trigger_info` (
   `alarm_threshold` int(11) DEFAULT NULL COMMENT '报警阀值(连续失败次数)',
   `executor_address` varchar(255) DEFAULT NULL COMMENT '执行器地址，有多个则逗号分隔',
   `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
-  `executor_param` varchar(255) DEFAULT NULL COMMENT '执行器任务参数',
+  `executor_param` text DEFAULT NULL COMMENT '执行器任务参数',
   `glue_switch` int(11) DEFAULT '0' COMMENT 'GLUE模式开关：0-否，1-是',
   `glue_source` text COMMENT 'GLUE源代码',
   `glue_remark` varchar(128) DEFAULT NULL COMMENT 'GLUE备注',
