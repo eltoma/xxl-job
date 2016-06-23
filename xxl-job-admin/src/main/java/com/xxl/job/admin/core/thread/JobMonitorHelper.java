@@ -20,18 +20,19 @@ import java.util.concurrent.*;
 public class JobMonitorHelper {
     private static Logger logger = LoggerFactory.getLogger(JobMonitorHelper.class);
 
-    private static JobMonitorHelper helper = new JobMonitorHelper();
-    private ExecutorService executor = Executors.newCachedThreadPool();
-    private LinkedBlockingQueue<Integer> queue = new LinkedBlockingQueue<Integer>(0xfff8);
-    private ConcurrentHashMap<String, Integer> countMap = new ConcurrentHashMap<String, Integer>();
+    private static final JobMonitorHelper helper = new JobMonitorHelper();
+    private final ExecutorService executor = Executors.newCachedThreadPool();
+    private final LinkedBlockingQueue<Integer> queue = new LinkedBlockingQueue<>(0xfff8);
+    private final ConcurrentHashMap<String, Integer> countMap = new ConcurrentHashMap<>();
 
     public JobMonitorHelper() {
+        logger.info("job monitor start ... ");
         // consumer
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 while (true) {
-                    logger.info(">>>>>>>>>>> job monitor run ... ");
+                    logger.debug(">>>>>>>>>>> job monitor run ... ");
                     Integer jobLogId = JobMonitorHelper.helper.queue.poll();
                     if (jobLogId != null && jobLogId > 0) {
                         XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(jobLogId);

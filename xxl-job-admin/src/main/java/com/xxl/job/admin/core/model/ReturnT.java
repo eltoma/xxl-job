@@ -6,8 +6,8 @@ package com.xxl.job.admin.core.model;
  * @param <T>
  */
 public class ReturnT<T> {
-	public static final ReturnT<String> SUCCESS = new ReturnT<String>(null);
-	public static final ReturnT<String> FAIL = new ReturnT<String>(500, null);
+	public static final ReturnT<String> SUCCESS = new ReturnT<>(null);
+	public static final ReturnT<String> FAIL = new ReturnT<>(500, null);
 	
 	private int code;
 	private String msg;
