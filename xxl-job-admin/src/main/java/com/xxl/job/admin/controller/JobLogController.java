@@ -85,14 +85,14 @@ public class JobLogController {
 	@PermessionLimit(limit=false)
 	public CallBack triggerLog(int trigger_log_id, String status, String msg) {
 		CallBack callBack = new CallBack();
-		callBack.setStatus(CallBack.FAIL);
+		callBack.setStatus(CallBack.STATUS_FAIL);
 		XxlJobLog log = xxlJobLogDao.load(trigger_log_id);
 		if (log!=null) {
 			log.setHandleTime(new Date());
 			log.setHandleStatus(status);
 			log.setHandleMsg(msg);
 			xxlJobLogDao.updateHandleInfo(log);
-			callBack.setStatus(CallBack.SUCCESS);
+			callBack.setStatus(CallBack.STATUS_SUCCESS);
 			return callBack;
 		}
 		return callBack;
@@ -104,10 +104,10 @@ public class JobLogController {
         // base check
         XxlJobLog log = xxlJobLogDao.load(id);
         if (log == null) {
-            return new ReturnT<String>(500, "参数异常");
+            return new ReturnT<>(500, "参数异常");
         }
-        if (!CallBack.SUCCESS.equals(log.getTriggerStatus())) {
-            return new ReturnT<String>(500, "调度失败，无法查看执行日志");
+        if (!CallBack.STATUS_SUCCESS.equals(log.getTriggerStatus())) {
+            return new ReturnT<>(500, "调度失败，无法查看执行日志");
         }
 
         // trigger id, trigger time
@@ -119,9 +119,9 @@ public class JobLogController {
 
         CallBack callBack = HttpUtil.post(HttpUtil.addressToUrl(log.getExecutorAddress()), reqMap);
         if (callBack.isSuccess()) {
-            return new ReturnT<String>(callBack.getMsg());
+            return new ReturnT<>(callBack.getMsg());
         } else {
-            return new ReturnT<String>(500, callBack.getMsg());
+            return new ReturnT<>(500, callBack.getMsg());
         }
     }
 
@@ -141,7 +141,7 @@ public class JobLogController {
         if (log == null || jobInfo == null) {
             return new ReturnT<String>(500, "参数异常");
         }
-        if (!CallBack.SUCCESS.equals(log.getTriggerStatus())) {
+        if (!CallBack.STATUS_SUCCESS.equals(log.getTriggerStatus())) {
             return new ReturnT<String>(500, "调度失败，无法终止日志");
         }
 
@@ -156,7 +156,7 @@ public class JobLogController {
 
         CallBack callBack = HttpUtil.post(HttpUtil.addressToUrl(log.getExecutorAddress()), reqMap);
         if (callBack.isSuccess()) {
-            log.setHandleStatus(CallBack.FAIL);
+            log.setHandleStatus(CallBack.STATUS_FAIL);
             log.setHandleMsg("人为操作主动终止");
             log.setHandleTime(new Date());
             xxlJobLogDao.updateHandleInfo(log);

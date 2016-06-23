@@ -2,6 +2,7 @@ package com.xxl.job.core.handler.impl;
 
 import com.xxl.job.core.glue.GlueFactory;
 import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.util.CallBack;
 
 /**
  * glue job handler
@@ -19,7 +20,7 @@ public class GlueJobHandler extends IJobHandler {
     }
 
     @Override
-    public JobHandleStatus execute(String... params) throws Exception {
+    public CallBack execute(String... params) throws Exception {
         return GlueFactory.glue(job_group, job_name, params);
     }
 

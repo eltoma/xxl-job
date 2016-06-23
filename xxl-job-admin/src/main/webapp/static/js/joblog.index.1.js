@@ -99,7 +99,7 @@ $(function() {
 	                		// better support expression or string, not function
 	                		return function () {
 		                		if (row.triggerStatus == 'SUCCESS'){
-		                			var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'">执行日志</a>';
+		                			var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'" _jobHandler="'+ row.executorHandler +'">执行日志</a>';
 		                			if(!row.handleStatus){
 		                				temp += '<br><a href="javascript:;" class="logKill" _id="'+ row.id +'">终止任务</a>';
 		                			}
@@ -156,8 +156,9 @@ $(function() {
 	// 查看执行器详细执行日志
 	$('#joblog_list').on('click', '.logDetail', function(){
 		var _id = $(this).attr('_id');
-		
-		window.open(base_url + '/joblog/logDetailPage?id=' + _id);
+		var _jobHandler = $(this).attr('_jobHandler');
+
+		window.open(base_url + '/joblog/logDetailPage?id=' + _id + "&jobHandler="+_jobHandler);
 		return;
 		
 		/*

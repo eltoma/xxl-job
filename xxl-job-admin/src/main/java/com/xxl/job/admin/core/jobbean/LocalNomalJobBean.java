@@ -62,14 +62,14 @@ package com.xxl.job.admin.core.jobbean;
 //		}
 //		
 //		jobLog.setTriggerTime(new Date());
-//		jobLog.setTriggerStatus(CallBack.SUCCESS);
+//		jobLog.setTriggerStatus(CallBack.STATUS_SUCCESS);
 //		jobLog.setTriggerMsg(null);
 //		
 //		try {
 //			Object responseMsg = this.handle(handlerParams);
 //			
 //			jobLog.setHandleTime(new Date());
-//			jobLog.setHandleStatus(CallBack.SUCCESS);
+//			jobLog.setHandleStatus(CallBack.STATUS_SUCCESS);
 //			jobLog.setHandleMsg(JacksonUtil.writeValueAsString(responseMsg));
 //		} catch (Exception e) {
 //			logger.info("Worker Exception:", e);
@@ -77,7 +77,7 @@ package com.xxl.job.admin.core.jobbean;
 //			e.printStackTrace(new PrintWriter(out));
 //			
 //			jobLog.setHandleTime(new Date());
-//			jobLog.setHandleStatus(CallBack.FAIL);
+//			jobLog.setHandleStatus(CallBack.STATUS_FAIL);
 //			jobLog.setHandleMsg(out.toString());
 //		}
 //		

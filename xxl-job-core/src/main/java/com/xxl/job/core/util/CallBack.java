@@ -4,12 +4,13 @@ package com.xxl.job.core.util;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class CallBack {
-    public static final String SUCCESS = "SUCCESS";
-    public static final String FAIL = "FAIL";
+    public static final String STATUS_SUCCESS = "SUCCESS";
+    public static final String STATUS_FAIL = "FAIL";
 
     private String status;
     private Integer code;
     private String msg;
+    private Object data;
 
     public CallBack() {
     }
@@ -23,14 +24,21 @@ public class CallBack {
         this.msg = msg;
     }
 
+    public CallBack(String status, Integer code, String msg, Object data) {
+        this.status = status;
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
+    }
+
     @JsonIgnore
     public boolean isSuccess() {
-        return status == SUCCESS;
+        return status == STATUS_SUCCESS;
     }
 
     @JsonIgnore
     public boolean isFail() {
-        return status == FAIL;
+        return status == STATUS_FAIL;
     }
 
     public void setStatus(String status) {
@@ -50,11 +58,11 @@ public class CallBack {
     }
 
     public void setSuccess() {
-        this.status = SUCCESS;
+        this.status = STATUS_SUCCESS;
     }
 
     public void setFail() {
-        this.status = FAIL;
+        this.status = STATUS_FAIL;
     }
 
     public void setMsg(String msg) {
@@ -65,20 +73,46 @@ public class CallBack {
         return msg;
     }
 
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
     public static CallBack success() {
-        return new CallBack(SUCCESS);
+        return new CallBack(STATUS_SUCCESS);
     }
 
     public static CallBack success(String msg) {
-        return new CallBack(SUCCESS, msg);
+        return new CallBack(STATUS_SUCCESS, msg);
     }
 
+    public static CallBack success(String msg, Object data) {
+        return new CallBack(STATUS_SUCCESS, msg);
+    }
+
+    public static CallBack successWithData(Object data) {
+        return new CallBack(STATUS_SUCCESS, null, null, data);
+    }
+
+
     public static CallBack fail() {
-        return new CallBack(FAIL);
+        return new CallBack(STATUS_FAIL);
     }
 
     public static CallBack fail(String msg) {
-        return new CallBack(FAIL, msg);
+        return new CallBack(STATUS_FAIL, msg);
+    }
+
+
+    public static CallBack fail(String msg, Object data) {
+        return new CallBack(STATUS_FAIL, msg);
+    }
+
+    public static CallBack failWithData(Object data) {
+        return new CallBack(STATUS_FAIL, null, null, data);
     }
 
     @Override

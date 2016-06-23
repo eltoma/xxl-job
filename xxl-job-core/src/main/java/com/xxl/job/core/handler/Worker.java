@@ -1,9 +1,11 @@
 package com.xxl.job.core.handler;
 
 import com.xxl.job.core.constant.HandlerParamEnum;
-import com.xxl.job.core.handler.IJobHandler.JobHandleStatus;
+import com.xxl.job.core.constant.JobHandleStatus;
 import com.xxl.job.core.log.LogCallBack;
+import com.xxl.job.core.util.CallBack;
 import com.xxl.job.core.util.HttpUtil;
+import com.xxl.job.core.util.JacksonUtil;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,11 +83,15 @@ public class Worker extends Thread {
 
                     // handle job
                     JobHandleStatus _status = JobHandleStatus.FAIL;
-                    String _msg = null;
+                    String _msg;
+                    String _returnInfo = null;
                     try {
                         contextHolder.set(log_id);
                         logger.info(">>>>>>>>>>> xxl-job handle start.");
-                        _status = handler.execute(handlerParams);
+                        CallBack callBack = handler.execute(handlerParams);
+                        _status = JobHandleStatus.valueOf(callBack);
+                        _msg = callBack.getMsg();
+                        _returnInfo = JacksonUtil.writeValueAsString(callBack.getData());
                     } catch (Exception e) {
                         logger.info("Worker Exception:", e);
                         StringWriter out = new StringWriter();
@@ -101,12 +107,14 @@ public class Worker extends Thread {
                         params.put("log_id", log_id);
                         params.put("status", _status.name());
                         params.put("msg", _msg);
+                        params.put("returnInfo", _returnInfo);
                         LogCallBack.pushLog(HttpUtil.addressToUrl(log_address), params);
                     } else {
                         HashMap<String, String> params = new HashMap<>();
                         params.put("log_id", log_id);
                         params.put("status", JobHandleStatus.FAIL.name());
                         params.put("msg", "人工手动终止[业务运行中，被强制终止]");
+                        params.put("returnInfo", _returnInfo);
                         LogCallBack.pushLog(HttpUtil.addressToUrl(log_address), params);
                     }
                 } else {

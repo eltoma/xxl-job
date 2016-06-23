@@ -1,5 +1,7 @@
 package com.xxl.job.core.handler;
 
+import com.xxl.job.core.util.CallBack;
+
 /**
  * remote job handler
  *
@@ -15,21 +17,7 @@ public abstract class IJobHandler {
      * @return
      * @throws Exception
      */
-    public abstract JobHandleStatus execute(String... params) throws Exception;
+    public abstract CallBack execute(String... params) throws Exception;
 
-    public enum JobHandleStatus {
-        /**
-         * handle success
-         */
-        SUCCESS,
-        /**
-         * handle fail
-         */
-        FAIL,
-        /**
-         * handle not found
-         */
-        NOT_FOUND;
-    }
 
 }

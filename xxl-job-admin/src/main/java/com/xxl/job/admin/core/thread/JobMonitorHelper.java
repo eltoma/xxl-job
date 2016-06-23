@@ -37,7 +37,7 @@ public class JobMonitorHelper {
                     if (jobLogId != null && jobLogId > 0) {
                         XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(jobLogId);
                         if (log != null) {
-                            if (CallBack.SUCCESS.equals(log.getTriggerStatus()) && StringUtils.isBlank(log.getHandleStatus())) {
+                            if (CallBack.STATUS_SUCCESS.equals(log.getTriggerStatus()) && StringUtils.isBlank(log.getHandleStatus())) {
                                 try {
                                     TimeUnit.SECONDS.sleep(10);
                                 } catch (InterruptedException e) {
@@ -45,10 +45,10 @@ public class JobMonitorHelper {
                                 }
                                 JobMonitorHelper.monitor(jobLogId);
                             }
-                            if (CallBack.SUCCESS.equals(log.getTriggerStatus()) && CallBack.SUCCESS.equals(log.getHandleStatus())) {
+                            if (CallBack.STATUS_SUCCESS.equals(log.getTriggerStatus()) && CallBack.STATUS_SUCCESS.equals(log.getHandleStatus())) {
                                 // pass
                             }
-                            if (CallBack.FAIL.equals(log.getTriggerStatus()) || CallBack.FAIL.equals(log.getHandleStatus())) {
+                            if (CallBack.STATUS_FAIL.equals(log.getTriggerStatus()) || CallBack.STATUS_FAIL.equals(log.getHandleStatus())) {
                                 String monotorKey = log.getJobGroup().concat("_").concat(log.getJobName());
                                 Integer count = countMap.get(monotorKey);
                                 if (count == null) {

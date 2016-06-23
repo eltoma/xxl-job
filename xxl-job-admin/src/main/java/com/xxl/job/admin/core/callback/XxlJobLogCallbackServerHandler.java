@@ -29,6 +29,7 @@ public class XxlJobLogCallbackServerHandler extends AbstractHandler {
         String log_id = httpServletRequest.getParameter("log_id");
         String status = httpServletRequest.getParameter("status");
         String msg = httpServletRequest.getParameter("msg");
+        String returnInfo = httpServletRequest.getParameter("returnInfo");
 
         // process
         CallBack callBack = CallBack.fail();
@@ -38,6 +39,7 @@ public class XxlJobLogCallbackServerHandler extends AbstractHandler {
                 log.setHandleTime(new Date());
                 log.setHandleStatus(status);
                 log.setHandleMsg(msg);
+                log.setHandleReturnInfo(returnInfo);
                 DynamicSchedulerUtil.xxlJobLogDao.updateHandleInfo(log);
                 callBack.setSuccess();
             }

@@ -1,5 +1,7 @@
 package com.xxl.job.core.handler;
 
+import com.xxl.job.core.util.CallBack;
+
 /**
  * Created by feiluo on 6/22/2016.
  */
@@ -12,7 +14,7 @@ public class JobHandlerProxy extends IJobHandler {
     }
 
     @Override
-    public JobHandleStatus execute(String... params) throws Exception {
+    public CallBack execute(String... params) throws Exception {
         return jobHandler.execute(params);
     }
 

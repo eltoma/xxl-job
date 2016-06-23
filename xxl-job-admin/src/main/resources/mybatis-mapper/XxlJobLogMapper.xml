@@ -23,7 +23,8 @@
 	    <result column="handle_time" property="handleTime" />
 	    <result column="handle_status" property="handleStatus" />
 	    <result column="handle_msg" property="handleMsg" />
-	    
+	    <result column="handle_return_info" property="handleReturnInfo" />
+
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -41,7 +42,8 @@
 		t.trigger_msg,
 		t.handle_time,
 		t.handle_status,
-		t.handle_msg
+		t.handle_msg,
+		t.handle_return_info
 	</sql>
 	
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobLog">
@@ -139,7 +141,8 @@
 		SET 
 			`handle_time`= #{handleTime}, 
 			`handle_status`= #{handleStatus}, 
-			`handle_msg`= #{handleMsg} 
+			`handle_msg`= #{handleMsg},
+			`handle_return_info`= #{handleReturnInfo}
 		WHERE `id`= #{id}
 	</update>
 	

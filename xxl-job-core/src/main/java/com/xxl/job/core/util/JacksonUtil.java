@@ -85,7 +85,7 @@ public class JacksonUtil {
 
     public static void main(String[] args) {
         try {
-            Map<String, String> map = new HashMap<String, String>();
+            Map<String, String> map = new HashMap<>();
             map.put("aaa", "111");
             map.put("bbb", "222");
             String json = writeValueAsString(map);

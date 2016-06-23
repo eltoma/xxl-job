@@ -5,6 +5,8 @@ import java.lang.reflect.Modifier;
 
 import javax.annotation.Resource;
 
+import com.xxl.job.core.constant.JobHandleStatus;
+import com.xxl.job.core.util.CallBack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -16,7 +18,6 @@ import org.springframework.core.annotation.AnnotationUtils;
 import com.xxl.job.core.glue.cache.LocalCache;
 import com.xxl.job.core.glue.loader.GlueLoader;
 import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.IJobHandler.JobHandleStatus;
 
 import groovy.lang.GroovyClassLoader;
 
@@ -157,7 +158,7 @@ public class GlueFactory implements ApplicationContextAware {
 	}
 	
 	// ----------------------------- util -----------------------------
-	public static JobHandleStatus glue(String job_group, String job_name, String... params) throws Exception{
+	public static CallBack glue(String job_group, String job_name, String... params) throws Exception{
 		return GlueFactory.glueFactory.loadInstance(job_group, job_name).execute(params);
 	}
 	

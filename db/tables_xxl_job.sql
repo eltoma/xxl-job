@@ -180,6 +180,7 @@ CREATE TABLE `xxl_job_qrtz_trigger_log` (
   `handle_time` datetime DEFAULT NULL COMMENT '执行-时间',
   `handle_status` varchar(255) DEFAULT NULL COMMENT '执行-状态',
   `handle_msg` varchar(2048) DEFAULT NULL COMMENT '执行-日志',
+  `handle_return_info` text COMMENT '执行-返回信息',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
 

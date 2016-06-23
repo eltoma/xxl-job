@@ -2,7 +2,7 @@ package com.xxl.job.dao.impl;
 
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
-import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.constant.JobHandleStatus;
 import com.xxl.job.core.util.CallBack;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +38,7 @@ public class XxlJobLogTest {
     public void updateTriggerInfo() {
         XxlJobLog xxlJobLog = xxlJobLogDao.load(29);
         xxlJobLog.setTriggerTime(new Date());
-        xxlJobLog.setTriggerStatus(CallBack.SUCCESS);
+        xxlJobLog.setTriggerStatus(CallBack.STATUS_SUCCESS);
         xxlJobLog.setTriggerMsg("trigger msg");
         xxlJobLogDao.updateTriggerInfo(xxlJobLog);
     }
@@ -47,7 +47,7 @@ public class XxlJobLogTest {
     public void updateHandleInfo() {
         XxlJobLog xxlJobLog = xxlJobLogDao.load(29);
         xxlJobLog.setHandleTime(new Date());
-        xxlJobLog.setHandleStatus(IJobHandler.JobHandleStatus.SUCCESS.name());
+        xxlJobLog.setHandleStatus(JobHandleStatus.SUCCESS.name());
         xxlJobLog.setHandleMsg("handle msg");
         xxlJobLogDao.updateHandleInfo(xxlJobLog);
     }
