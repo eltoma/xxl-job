@@ -3,7 +3,6 @@ package com.xxl.job.executor.service.jobhandler;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.Worker;
 import com.xxl.job.core.handler.annotation.JobHander;
-import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.executor.service.parser.KettleJobParamParser;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.Result;
@@ -16,7 +15,6 @@ import org.pentaho.di.trans.Trans;
 import org.pentaho.di.trans.TransMeta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
@@ -91,7 +89,7 @@ public class KettleJobHandler extends IJobHandler {
             logger.error("[kettle Transformation]run error. {}", new Object[]{result == null ? "" : result.getLogText()});
             return JobHandleStatus.FAIL;
         }
-        logger.error("[kettle Transformation]run info. {}", new Object[]{result == null ? "" : result.getLogText()});
+        logger.info("[kettle Transformation]run info. {}", new Object[]{result == null ? "" : result.getLogText()});
         return JobHandleStatus.SUCCESS;
     }
 
@@ -118,7 +116,7 @@ public class KettleJobHandler extends IJobHandler {
             logger.error("[kettle Transformation]run error. {}", new Object[]{result == null ? "" : result.getLogText()});
             return JobHandleStatus.FAIL;
         }
-        logger.error("[kettle Transformation]run info. {}", new Object[]{result == null ? "" : result.getLogText()});
+        logger.info("[kettle Transformation]run info. {}", new Object[]{result == null ? "" : result.getLogText()});
         // Now the job task is finished, mark it as finished.
         job.setFinished(true);
         // Cleanup the parameters used by the job. Post that invoke GC.

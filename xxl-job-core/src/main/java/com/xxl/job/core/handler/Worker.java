@@ -1,19 +1,21 @@
 package com.xxl.job.core.handler;
 
+import com.xxl.job.core.constant.HandlerParamEnum;
+import com.xxl.job.core.handler.IJobHandler.JobHandleStatus;
+import com.xxl.job.core.log.LogCallBack;
+import com.xxl.job.core.util.HttpUtil;
+import org.eclipse.jetty.util.ConcurrentHashSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-
-import com.xxl.job.core.constant.HandlerParamEnum;
-import org.eclipse.jetty.util.ConcurrentHashSet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.xxl.job.core.handler.IJobHandler.JobHandleStatus;
-import com.xxl.job.core.util.HttpUtil;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -22,13 +24,14 @@ import com.xxl.job.core.util.HttpUtil;
  * @author xuxueli 2016-1-16 19:52:47
  */
 public class Worker extends Thread {
-    private static Logger logger = LoggerFactory.getLogger(Worker.class);
+    private static final Logger logger = LoggerFactory.getLogger(Worker.class);
 
-    private IJobHandler handler;
-    private LinkedBlockingQueue<Map<String, String>> jobQueue;
-    private ConcurrentHashSet<String> logIdSet;        // avoid repeat trigger for the same TRIGGER_LOG_ID
-    private final static ThreadLocal<String> contextHolder = new ThreadLocal<String>();
-    private boolean toStop = false;
+    private final IJobHandler handler;
+    private final LinkedBlockingQueue<Map<String, String>> jobQueue;
+    private final ConcurrentHashSet<String> logIdSet;        // avoid repeat trigger for the same TRIGGER_LOG_ID
+    private final static ThreadLocal<String> contextHolder = new ThreadLocal<>();
+    private final AtomicBoolean toStop = new AtomicBoolean(false);
+    private final AtomicInteger i = new AtomicInteger(1);
 
     public Worker(IJobHandler handler) {
         this.handler = handler;
@@ -46,7 +49,7 @@ public class Worker extends Thread {
          * 在阻塞出抛出InterruptedException异常,但是并不会终止运行的线程本身；
          * 所以需要注意，此处彻底销毁本线程，需要通过共享变量方式；
          */
-        this.toStop = true;
+        this.toStop.set(true);
     }
 
     public void pushJob(Map<String, String> jobInfo) {
@@ -55,15 +58,14 @@ public class Worker extends Thread {
         }
     }
 
-    int i = 1;
 
     @Override
     public void run() {
-        while (!toStop) {
+        while (!toStop.get()) {
             try {
                 Map<String, String> handlerData = jobQueue.poll();
                 if (handlerData != null) {
-                    i = 0;
+                    i.set(0);
                     String log_address = handlerData.get(HandlerParamEnum.LOG_ADDRESS.name());
                     String log_id = handlerData.get(HandlerParamEnum.LOG_ID.name());
                     String handler_params = handlerData.get(HandlerParamEnum.EXECUTOR_PARAMS.name());
@@ -94,29 +96,29 @@ public class Worker extends Thread {
                             new Object[]{handlerParams, _status, _msg});
 
                     // callback handler info
-                    if (!toStop) {
+                    if (!toStop.get()) {
                         HashMap<String, String> params = new HashMap<>();
                         params.put("log_id", log_id);
                         params.put("status", _status.name());
                         params.put("msg", _msg);
-                        ActionHandlerRepository.pushCallBack(HttpUtil.addressToUrl(log_address), params);
+                        LogCallBack.pushLog(HttpUtil.addressToUrl(log_address), params);
                     } else {
                         HashMap<String, String> params = new HashMap<>();
                         params.put("log_id", log_id);
                         params.put("status", JobHandleStatus.FAIL.name());
                         params.put("msg", "人工手动终止[业务运行中，被强制终止]");
-                        ActionHandlerRepository.pushCallBack(HttpUtil.addressToUrl(log_address), params);
+                        LogCallBack.pushLog(HttpUtil.addressToUrl(log_address), params);
                     }
                 } else {
-                    i++;
+                    i.getAndIncrement();
                     logIdSet.clear();
                     try {
-                        TimeUnit.MILLISECONDS.sleep(i * 100);
+                        TimeUnit.MILLISECONDS.sleep(i.get() * 100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    if (i > 5) {
-                        i = 0;
+                    if (i.get() > 5) {
+                        i.set(0);
                     }
                 }
             } catch (Exception e) {
@@ -131,11 +133,11 @@ public class Worker extends Thread {
                 String log_address = handlerData.get(HandlerParamEnum.LOG_ADDRESS.name());
                 String log_id = handlerData.get(HandlerParamEnum.LOG_ID.name());
 
-                HashMap<String, String> params = new HashMap<String, String>();
+                HashMap<String, String> params = new HashMap<>();
                 params.put("log_id", log_id);
                 params.put("status", JobHandleStatus.FAIL.name());
                 params.put("msg", "人工手动终止[任务尚未执行，在调度队列中被终止]");
-                ActionHandlerRepository.pushCallBack(HttpUtil.addressToUrl(log_address), params);
+                LogCallBack.pushLog(HttpUtil.addressToUrl(log_address), params);
             }
         }
 

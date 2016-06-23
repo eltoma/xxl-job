@@ -19,8 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class WorkerRepository implements ApplicationContextAware {
 
-    private static Logger logger = LoggerFactory.getLogger(WorkerRepository.class);
-    private static ConcurrentHashMap<String, Worker> workerMap = new ConcurrentHashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(WorkerRepository.class);
+    private static final ConcurrentHashMap<String, Worker> workerMap = new ConcurrentHashMap<>();
 
     /**
      * regist handler

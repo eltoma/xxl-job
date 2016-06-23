@@ -178,10 +178,9 @@ public class XxlJobFileAppender extends AppenderSkeleton {
     /**
      * read data from line num
      *
-     * @param sourceFile
+     * @param logFile
      * @param fromLineNum
      * @return
-     * @throws Exception
      */
     public static String readLinesFrom(File logFile, int fromLineNum) {
         LineNumberReader reader = null;

@@ -7,8 +7,7 @@
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    <context:component-scan base-package="com.xxl.job.executor"/>
-    <context:component-scan base-package="com.xxl.job.core.handler.action"/>
+    <context:component-scan base-package="com.xxl.job"/>
 
     <!-- 执行器 -->
     <bean id="xxlJobExecutor" class="com.xxl.job.core.executor.jetty.XxlJobExecutor" init-method="start"

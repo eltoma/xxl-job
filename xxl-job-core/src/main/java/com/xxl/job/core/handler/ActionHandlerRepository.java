@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,8 +25,9 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * @author xuxueli 2015-12-19 19:28:44
  */
+@Component
 public class ActionHandlerRepository implements ApplicationContextAware {
-    private static Logger logger = LoggerFactory.getLogger(ActionHandlerRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(ActionHandlerRepository.class);
 
 
     private static Multimap<ActionEnum, Class<? extends IActionHandler>> actionHandlerMap;
@@ -77,41 +79,6 @@ public class ActionHandlerRepository implements ApplicationContextAware {
             }
         }
         return callback;
-    }
-
-
-
-
-    // ----------------------- for callback log -----------------------
-    private static LinkedBlockingQueue<HashMap<String, String>> callBackQueue = new LinkedBlockingQueue<HashMap<String, String>>();
-
-    static {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        HashMap<String, String> item = callBackQueue.poll();
-                        if (item != null) {
-                            CallBack callback = null;
-                            try {
-                                callback = HttpUtil.post(item.get("_address"), item);
-                            } catch (Exception e) {
-                                logger.info("Worker Exception:", e);
-                            }
-                            logger.info(">>>>>>>>>>> xxl-job callback , params:{}, result:{}", new Object[]{item, callback});
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-    }
-
-    public static void pushCallBack(String address, HashMap<String, String> params) {
-        params.put("_address", address);
-        callBackQueue.add(params);
     }
 
     // ---------------------------------- init action handler ------------------------------------
