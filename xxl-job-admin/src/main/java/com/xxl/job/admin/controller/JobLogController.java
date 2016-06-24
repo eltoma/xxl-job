@@ -101,7 +101,7 @@ public class JobLogController {
 
     @RequestMapping("/logDetail")
     @ResponseBody
-    public ReturnT<String> logDetail(int id, String jobHandler, String logType) {
+    public ReturnT<?> logDetail(int id, String jobHandler, String logType) {
         // base check
         XxlJobLog log = xxlJobLogDao.load(id);
         if (log == null) {
@@ -122,7 +122,7 @@ public class JobLogController {
 
         CallBack callBack = HttpUtil.post(HttpUtil.addressToUrl(log.getExecutorAddress()), reqMap);
         if (callBack.isSuccess()) {
-            return new ReturnT<>(callBack.getData() == null ? null : callBack.getData().toString());
+            return new ReturnT<>(callBack.getData());
         } else {
             return new ReturnT<>(500, callBack.getMsg());
         }
@@ -130,7 +130,7 @@ public class JobLogController {
 
     @RequestMapping("/logDetailPage")
     public String logDetailPage(int id, String jobHandler, String logType, Model model) {
-        ReturnT<String> data = logDetail(id, jobHandler, logType);
+        ReturnT<?> data = logDetail(id, jobHandler, logType);
         model.addAttribute("result", data);
         return "joblog/logdetail";
     }

@@ -1,5 +1,6 @@
 package com.xxl.job.core.handler.action;
 
+import com.google.common.base.Optional;
 import com.xxl.job.core.constant.ActionEnum;
 import com.xxl.job.core.constant.HandlerParamEnum;
 import com.xxl.job.core.handler.ActionHandlerRepository;
@@ -42,7 +43,8 @@ public class LogActionHandler implements IActionHandler {
             return CallBack.fail("LOG_ID | LOG_DATE parse error.");
         }
         try {
-            return CallBack.successWithData(logReaderRepository.readLog(jobHandlerName, logType, log_id, triggerDate).get());
+            Optional<Object> objectOptional = logReaderRepository.readLog(jobHandlerName, logType, log_id, triggerDate);
+            return objectOptional.isPresent() ? CallBack.successWithData(objectOptional.get()) : CallBack.success();
         } catch (Exception e) {
             logger.error("read log error.", e);
             return CallBack.fail("read log error.");

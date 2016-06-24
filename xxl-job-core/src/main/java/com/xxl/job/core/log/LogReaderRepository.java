@@ -51,7 +51,7 @@ public class LogReaderRepository implements ApplicationContextAware {
         Object bean = applicationContext.getBean(logReaderClass);
         try {
             Object returnData = method.invoke(bean, triggerLogId, triggerDate);
-            return Optional.of(returnData);
+            return Optional.fromNullable(returnData);
         } catch (Exception e) {
             logger.error("call Log reader fail.", e);
             throw e;

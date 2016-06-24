@@ -9,7 +9,9 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by feiluo on 6/24/2016.
@@ -24,7 +26,7 @@ public class DefaultFileLogReader {
      * @return
      */
     @LogType
-    public String read(String triggerLogId, Date triggerDate) throws IOException {
+    public List<String> read(String triggerLogId, Date triggerDate) throws IOException {
         if (StringUtils.isBlank(triggerLogId) || triggerDate == null) {
             return null;
         }
@@ -32,9 +34,9 @@ public class DefaultFileLogReader {
         String fileFullName = XxlJobFileAppender.filePath + DateFormatUtils.ISO_DATE_FORMAT.format(triggerDate) + File.separator + triggerLogId.concat(".log");
         File logFile = new File(fileFullName);
         if (!logFile.exists()) {
-            return "";
+            return Collections.EMPTY_LIST;
         }
-        return FileUtils.readFileToString(logFile, Charsets.UTF_8);
+        return FileUtils.readLines(logFile, Charsets.UTF_8);
     }
 
 }
