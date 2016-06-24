@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xxl.job.executor.loader.dao.LogKettleTranMetricsMapper" >
+  <resultMap id="BaseResultMap" type="com.xxl.job.executor.loader.dao.model.LogKettleTranMetrics" >
+    <result column="ID_LOG" property="ID_LOG" jdbcType="INTEGER" />
+    <result column="ID_BATCH" property="ID_BATCH" jdbcType="INTEGER" />
+    <result column="CHANNEL_ID" property="CHANNEL_ID" jdbcType="VARCHAR" />
+    <result column="LOG_DATE" property="LOG_DATE" jdbcType="TIMESTAMP" />
+    <result column="METRICS_DATE" property="METRICS_DATE" jdbcType="TIMESTAMP" />
+    <result column="METRICS_CODE" property="METRICS_CODE" jdbcType="VARCHAR" />
+    <result column="METRICS_DESCRIPTION" property="METRICS_DESCRIPTION" jdbcType="VARCHAR" />
+    <result column="METRICS_SUBJECT" property="METRICS_SUBJECT" jdbcType="VARCHAR" />
+    <result column="METRICS_TYPE" property="METRICS_TYPE" jdbcType="VARCHAR" />
+    <result column="METRICS_VALUE" property="METRICS_VALUE" jdbcType="BIGINT" />
+  </resultMap>
+  <insert id="insert" parameterType="com.xxl.job.executor.loader.dao.model.LogKettleTranMetrics" >
+    insert into log_kettle_tran_metrics (ID_LOG, ID_BATCH, CHANNEL_ID, 
+      LOG_DATE, METRICS_DATE, METRICS_CODE, 
+      METRICS_DESCRIPTION, METRICS_SUBJECT, METRICS_TYPE, 
+      METRICS_VALUE)
+    values (#{ID_LOG,jdbcType=INTEGER}, #{ID_BATCH,jdbcType=INTEGER}, #{CHANNEL_ID,jdbcType=VARCHAR}, 
+      #{LOG_DATE,jdbcType=TIMESTAMP}, #{METRICS_DATE,jdbcType=TIMESTAMP}, #{METRICS_CODE,jdbcType=VARCHAR}, 
+      #{METRICS_DESCRIPTION,jdbcType=VARCHAR}, #{METRICS_SUBJECT,jdbcType=VARCHAR}, #{METRICS_TYPE,jdbcType=VARCHAR}, 
+      #{METRICS_VALUE,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xxl.job.executor.loader.dao.model.LogKettleTranMetrics" >
+    insert into log_kettle_tran_metrics
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ID_LOG != null" >
+        ID_LOG,
+      </if>
+      <if test="ID_BATCH != null" >
+        ID_BATCH,
+      </if>
+      <if test="CHANNEL_ID != null" >
+        CHANNEL_ID,
+      </if>
+      <if test="LOG_DATE != null" >
+        LOG_DATE,
+      </if>
+      <if test="METRICS_DATE != null" >
+        METRICS_DATE,
+      </if>
+      <if test="METRICS_CODE != null" >
+        METRICS_CODE,
+      </if>
+      <if test="METRICS_DESCRIPTION != null" >
+        METRICS_DESCRIPTION,
+      </if>
+      <if test="METRICS_SUBJECT != null" >
+        METRICS_SUBJECT,
+      </if>
+      <if test="METRICS_TYPE != null" >
+        METRICS_TYPE,
+      </if>
+      <if test="METRICS_VALUE != null" >
+        METRICS_VALUE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ID_LOG != null" >
+        #{ID_LOG,jdbcType=INTEGER},
+      </if>
+      <if test="ID_BATCH != null" >
+        #{ID_BATCH,jdbcType=INTEGER},
+      </if>
+      <if test="CHANNEL_ID != null" >
+        #{CHANNEL_ID,jdbcType=VARCHAR},
+      </if>
+      <if test="LOG_DATE != null" >
+        #{LOG_DATE,jdbcType=TIMESTAMP},
+      </if>
+      <if test="METRICS_DATE != null" >
+        #{METRICS_DATE,jdbcType=TIMESTAMP},
+      </if>
+      <if test="METRICS_CODE != null" >
+        #{METRICS_CODE,jdbcType=VARCHAR},
+      </if>
+      <if test="METRICS_DESCRIPTION != null" >
+        #{METRICS_DESCRIPTION,jdbcType=VARCHAR},
+      </if>
+      <if test="METRICS_SUBJECT != null" >
+        #{METRICS_SUBJECT,jdbcType=VARCHAR},
+      </if>
+      <if test="METRICS_TYPE != null" >
+        #{METRICS_TYPE,jdbcType=VARCHAR},
+      </if>
+      <if test="METRICS_VALUE != null" >
+        #{METRICS_VALUE,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -2,6 +2,13 @@ package com.xxl.job.executor.service.joblogreader;
 
 import com.xxl.job.core.log.reader.LogReader;
 import com.xxl.job.core.log.reader.LogType;
+import com.xxl.job.executor.loader.dao.LogKettleJobChannelMapper;
+import com.xxl.job.executor.loader.dao.LogKettleJobItemMapper;
+import com.xxl.job.executor.loader.dao.LogKettleJobMapper;
+import com.xxl.job.executor.loader.dao.model.LogKettleJob;
+import com.xxl.job.executor.loader.dao.model.LogKettleJobChannel;
+import com.xxl.job.executor.loader.dao.model.LogKettleJobItem;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,19 +20,25 @@ import java.util.List;
 @LogReader(forJobHandler = "KettleJobHandler")
 public class LogReader4KettleJobHandler {
 
+    @Autowired
+    private LogKettleJobMapper logKettleJobMapper;
+    @Autowired
+    private LogKettleJobChannelMapper logKettleJobChannelMapper;
+    @Autowired
+    private LogKettleJobItemMapper logKettleJobItemMapper;
 
     @LogType("job_log")
-    public List<? extends Serializable> readJobLog(String triggerLogId, Date triggerDate) throws Exception {
+    public List<LogKettleJob> readJobLog(String triggerLogId, Date triggerDate) throws Exception {
         return null;
     }
 
     @LogType("job_item_log")
-    public List<? extends Serializable> readJobItemLog(String triggerLogId, Date triggerDate) throws Exception {
+    public List<LogKettleJobItem> readJobItemLog(String triggerLogId, Date triggerDate) throws Exception {
         return null;
     }
 
     @LogType("job_channel_log")
-    public List<? extends Serializable> readJobChannelLog(String triggerLogId, Date triggerDate) throws Exception {
+    public List<LogKettleJobChannel> readJobChannelLog(String triggerLogId, Date triggerDate) throws Exception {
         return null;
     }
 }

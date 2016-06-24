@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xxl.job.executor.loader.dao.LogKettleJobMapper" >
+  <resultMap id="BaseResultMap" type="com.xxl.job.executor.loader.dao.model.LogKettleJob" >
+    <result column="ID_LOG" property="ID_LOG" jdbcType="INTEGER" />
+    <result column="ID_JOB" property="ID_JOB" jdbcType="INTEGER" />
+    <result column="CHANNEL_ID" property="CHANNEL_ID" jdbcType="VARCHAR" />
+    <result column="JOBNAME" property="JOBNAME" jdbcType="VARCHAR" />
+    <result column="STATUS" property="STATUS" jdbcType="VARCHAR" />
+    <result column="LINES_READ" property="LINES_READ" jdbcType="BIGINT" />
+    <result column="LINES_WRITTEN" property="LINES_WRITTEN" jdbcType="BIGINT" />
+    <result column="LINES_UPDATED" property="LINES_UPDATED" jdbcType="BIGINT" />
+    <result column="LINES_INPUT" property="LINES_INPUT" jdbcType="BIGINT" />
+    <result column="LINES_OUTPUT" property="LINES_OUTPUT" jdbcType="BIGINT" />
+    <result column="LINES_REJECTED" property="LINES_REJECTED" jdbcType="BIGINT" />
+    <result column="ERRORS" property="ERRORS" jdbcType="BIGINT" />
+    <result column="STARTDATE" property="STARTDATE" jdbcType="TIMESTAMP" />
+    <result column="ENDDATE" property="ENDDATE" jdbcType="TIMESTAMP" />
+    <result column="LOGDATE" property="LOGDATE" jdbcType="TIMESTAMP" />
+    <result column="DEPDATE" property="DEPDATE" jdbcType="TIMESTAMP" />
+    <result column="REPLAYDATE" property="REPLAYDATE" jdbcType="TIMESTAMP" />
+    <result column="EXECUTING_SERVER" property="EXECUTING_SERVER" jdbcType="VARCHAR" />
+    <result column="EXECUTING_USER" property="EXECUTING_USER" jdbcType="VARCHAR" />
+    <result column="START_JOB_ENTRY" property="START_JOB_ENTRY" jdbcType="VARCHAR" />
+    <result column="CLIENT" property="CLIENT" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.xxl.job.executor.loader.dao.model.LogKettleJob" extends="BaseResultMap" >
+    <result column="LOG_FIELD" property="LOG_FIELD" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Blob_Column_List" >
+    LOG_FIELD
+  </sql>
+  <insert id="insert" parameterType="com.xxl.job.executor.loader.dao.model.LogKettleJob" >
+    insert into log_kettle_job (ID_LOG, ID_JOB, CHANNEL_ID, 
+      JOBNAME, STATUS, LINES_READ, 
+      LINES_WRITTEN, LINES_UPDATED, LINES_INPUT, 
+      LINES_OUTPUT, LINES_REJECTED, ERRORS, 
+      STARTDATE, ENDDATE, LOGDATE, 
+      DEPDATE, REPLAYDATE, EXECUTING_SERVER, 
+      EXECUTING_USER, START_JOB_ENTRY, CLIENT, 
+      LOG_FIELD)
+    values (#{ID_LOG,jdbcType=INTEGER}, #{ID_JOB,jdbcType=INTEGER}, #{CHANNEL_ID,jdbcType=VARCHAR}, 
+      #{JOBNAME,jdbcType=VARCHAR}, #{STATUS,jdbcType=VARCHAR}, #{LINES_READ,jdbcType=BIGINT}, 
+      #{LINES_WRITTEN,jdbcType=BIGINT}, #{LINES_UPDATED,jdbcType=BIGINT}, #{LINES_INPUT,jdbcType=BIGINT}, 
+      #{LINES_OUTPUT,jdbcType=BIGINT}, #{LINES_REJECTED,jdbcType=BIGINT}, #{ERRORS,jdbcType=BIGINT}, 
+      #{STARTDATE,jdbcType=TIMESTAMP}, #{ENDDATE,jdbcType=TIMESTAMP}, #{LOGDATE,jdbcType=TIMESTAMP}, 
+      #{DEPDATE,jdbcType=TIMESTAMP}, #{REPLAYDATE,jdbcType=TIMESTAMP}, #{EXECUTING_SERVER,jdbcType=VARCHAR}, 
+      #{EXECUTING_USER,jdbcType=VARCHAR}, #{START_JOB_ENTRY,jdbcType=VARCHAR}, #{CLIENT,jdbcType=VARCHAR}, 
+      #{LOG_FIELD,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xxl.job.executor.loader.dao.model.LogKettleJob" >
+    insert into log_kettle_job
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ID_LOG != null" >
+        ID_LOG,
+      </if>
+      <if test="ID_JOB != null" >
+        ID_JOB,
+      </if>
+      <if test="CHANNEL_ID != null" >
+        CHANNEL_ID,
+      </if>
+      <if test="JOBNAME != null" >
+        JOBNAME,
+      </if>
+      <if test="STATUS != null" >
+        STATUS,
+      </if>
+      <if test="LINES_READ != null" >
+        LINES_READ,
+      </if>
+      <if test="LINES_WRITTEN != null" >
+        LINES_WRITTEN,
+      </if>
+      <if test="LINES_UPDATED != null" >
+        LINES_UPDATED,
+      </if>
+      <if test="LINES_INPUT != null" >
+        LINES_INPUT,
+      </if>
+      <if test="LINES_OUTPUT != null" >
+        LINES_OUTPUT,
+      </if>
+      <if test="LINES_REJECTED != null" >
+        LINES_REJECTED,
+      </if>
+      <if test="ERRORS != null" >
+        ERRORS,
+      </if>
+      <if test="STARTDATE != null" >
+        STARTDATE,
+      </if>
+      <if test="ENDDATE != null" >
+        ENDDATE,
+      </if>
+      <if test="LOGDATE != null" >
+        LOGDATE,
+      </if>
+      <if test="DEPDATE != null" >
+        DEPDATE,
+      </if>
+      <if test="REPLAYDATE != null" >
+        REPLAYDATE,
+      </if>
+      <if test="EXECUTING_SERVER != null" >
+        EXECUTING_SERVER,
+      </if>
+      <if test="EXECUTING_USER != null" >
+        EXECUTING_USER,
+      </if>
+      <if test="START_JOB_ENTRY != null" >
+        START_JOB_ENTRY,
+      </if>
+      <if test="CLIENT != null" >
+        CLIENT,
+      </if>
+      <if test="LOG_FIELD != null" >
+        LOG_FIELD,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ID_LOG != null" >
+        #{ID_LOG,jdbcType=INTEGER},
+      </if>
+      <if test="ID_JOB != null" >
+        #{ID_JOB,jdbcType=INTEGER},
+      </if>
+      <if test="CHANNEL_ID != null" >
+        #{CHANNEL_ID,jdbcType=VARCHAR},
+      </if>
+      <if test="JOBNAME != null" >
+        #{JOBNAME,jdbcType=VARCHAR},
+      </if>
+      <if test="STATUS != null" >
+        #{STATUS,jdbcType=VARCHAR},
+      </if>
+      <if test="LINES_READ != null" >
+        #{LINES_READ,jdbcType=BIGINT},
+      </if>
+      <if test="LINES_WRITTEN != null" >
+        #{LINES_WRITTEN,jdbcType=BIGINT},
+      </if>
+      <if test="LINES_UPDATED != null" >
+        #{LINES_UPDATED,jdbcType=BIGINT},
+      </if>
+      <if test="LINES_INPUT != null" >
+        #{LINES_INPUT,jdbcType=BIGINT},
+      </if>
+      <if test="LINES_OUTPUT != null" >
+        #{LINES_OUTPUT,jdbcType=BIGINT},
+      </if>
+      <if test="LINES_REJECTED != null" >
+        #{LINES_REJECTED,jdbcType=BIGINT},
+      </if>
+      <if test="ERRORS != null" >
+        #{ERRORS,jdbcType=BIGINT},
+      </if>
+      <if test="STARTDATE != null" >
+        #{STARTDATE,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ENDDATE != null" >
+        #{ENDDATE,jdbcType=TIMESTAMP},
+      </if>
+      <if test="LOGDATE != null" >
+        #{LOGDATE,jdbcType=TIMESTAMP},
+      </if>
+      <if test="DEPDATE != null" >
+        #{DEPDATE,jdbcType=TIMESTAMP},
+      </if>
+      <if test="REPLAYDATE != null" >
+        #{REPLAYDATE,jdbcType=TIMESTAMP},
+      </if>
+      <if test="EXECUTING_SERVER != null" >
+        #{EXECUTING_SERVER,jdbcType=VARCHAR},
+      </if>
+      <if test="EXECUTING_USER != null" >
+        #{EXECUTING_USER,jdbcType=VARCHAR},
+      </if>
+      <if test="START_JOB_ENTRY != null" >
+        #{START_JOB_ENTRY,jdbcType=VARCHAR},
+      </if>
+      <if test="CLIENT != null" >
+        #{CLIENT,jdbcType=VARCHAR},
+      </if>
+      <if test="LOG_FIELD != null" >
+        #{LOG_FIELD,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

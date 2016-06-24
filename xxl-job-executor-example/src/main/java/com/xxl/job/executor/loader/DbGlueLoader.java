@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.xxl.job.core.glue.loader.GlueLoader;
-import com.xxl.job.executor.loader.dao.IXxlJobInfoDao;
+import com.xxl.job.executor.loader.dao.XxlJobInfoMapper;
 import com.xxl.job.executor.loader.dao.model.XxlJobInfo;
 
 /**
@@ -16,7 +16,7 @@ import com.xxl.job.executor.loader.dao.model.XxlJobInfo;
 public class DbGlueLoader implements GlueLoader {
 
 	@Resource
-	private IXxlJobInfoDao xxlJobInfoDao;
+	private XxlJobInfoMapper xxlJobInfoDao;
 	
 	@Override
 	public String load(String job_group, String job_name) {

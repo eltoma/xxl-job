@@ -196,6 +196,198 @@ CREATE TABLE `xxl_job_qrtz_trigger_logglue` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 
+/*Table structure for table `log_job` */
+
+DROP TABLE IF EXISTS `log_job`;
+
+CREATE TABLE `log_job` (
+  `ID_LOG` int(11) DEFAULT NULL,
+  `ID_JOB` int(11) DEFAULT NULL,
+  `CHANNEL_ID` varchar(255) DEFAULT NULL,
+  `JOBNAME` varchar(255) DEFAULT NULL,
+  `STATUS` varchar(15) DEFAULT NULL,
+  `LINES_READ` bigint(20) DEFAULT NULL,
+  `LINES_WRITTEN` bigint(20) DEFAULT NULL,
+  `LINES_UPDATED` bigint(20) DEFAULT NULL,
+  `LINES_INPUT` bigint(20) DEFAULT NULL,
+  `LINES_OUTPUT` bigint(20) DEFAULT NULL,
+  `LINES_REJECTED` bigint(20) DEFAULT NULL,
+  `ERRORS` bigint(20) DEFAULT NULL,
+  `STARTDATE` datetime DEFAULT NULL,
+  `ENDDATE` datetime DEFAULT NULL,
+  `LOGDATE` datetime DEFAULT NULL,
+  `DEPDATE` datetime DEFAULT NULL,
+  `REPLAYDATE` datetime DEFAULT NULL,
+  `LOG_FIELD` mediumtext,
+  `EXECUTING_SERVER` varchar(255) DEFAULT NULL,
+  `EXECUTING_USER` varchar(255) DEFAULT NULL,
+  `START_JOB_ENTRY` varchar(255) DEFAULT NULL,
+  `CLIENT` varchar(255) DEFAULT NULL,
+  KEY `IDX_job_log_1` (`ID_JOB`),
+  KEY `IDX_job_log_2` (`ERRORS`,`STATUS`,`JOBNAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Table structure for table `log_job_channel` */
+
+DROP TABLE IF EXISTS `log_job_channel`;
+
+CREATE TABLE `log_job_channel` (
+  `ID_LOG` int(11) DEFAULT NULL,
+  `ID_BATCH` int(11) DEFAULT NULL,
+  `CHANNEL_ID` varchar(255) DEFAULT NULL,
+  `LOG_DATE` datetime DEFAULT NULL,
+  `LOGGING_OBJECT_TYPE` varchar(255) DEFAULT NULL,
+  `OBJECT_NAME` varchar(255) DEFAULT NULL,
+  `OBJECT_COPY` varchar(255) DEFAULT NULL,
+  `REPOSITORY_DIRECTORY` varchar(255) DEFAULT NULL,
+  `FILENAME` varchar(255) DEFAULT NULL,
+  `OBJECT_ID` varchar(255) DEFAULT NULL,
+  `OBJECT_REVISION` varchar(255) DEFAULT NULL,
+  `PARENT_CHANNEL_ID` varchar(255) DEFAULT NULL,
+  `ROOT_CHANNEL_ID` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Table structure for table `log_job_item` */
+
+DROP TABLE IF EXISTS `log_job_item`;
+
+CREATE TABLE `log_job_item` (
+  `ID_LOG` int(11) DEFAULT NULL,
+  `ID_BATCH` int(11) DEFAULT NULL,
+  `CHANNEL_ID` varchar(255) DEFAULT NULL,
+  `LOG_DATE` datetime DEFAULT NULL,
+  `TRANSNAME` varchar(255) DEFAULT NULL,
+  `STEPNAME` varchar(255) DEFAULT NULL,
+  `LINES_READ` bigint(20) DEFAULT NULL,
+  `LINES_WRITTEN` bigint(20) DEFAULT NULL,
+  `LINES_UPDATED` bigint(20) DEFAULT NULL,
+  `LINES_INPUT` bigint(20) DEFAULT NULL,
+  `LINES_OUTPUT` bigint(20) DEFAULT NULL,
+  `LINES_REJECTED` bigint(20) DEFAULT NULL,
+  `ERRORS` bigint(20) DEFAULT NULL,
+  `RESULT` tinyint(1) DEFAULT NULL,
+  `NR_RESULT_ROWS` bigint(20) DEFAULT NULL,
+  `NR_RESULT_FILES` bigint(20) DEFAULT NULL,
+  `LOG_FIELD` mediumtext,
+  `COPY_NR` int(11) DEFAULT NULL,
+  KEY `IDX_job_item_log_1` (`ID_BATCH`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Table structure for table `log_tran` */
+
+DROP TABLE IF EXISTS `log_tran`;
+
+CREATE TABLE `log_tran` (
+  `ID_LOG` int(11) DEFAULT NULL,
+  `ID_BATCH` int(11) DEFAULT NULL,
+  `CHANNEL_ID` varchar(255) DEFAULT NULL,
+  `TRANSNAME` varchar(255) DEFAULT NULL,
+  `STATUS` varchar(15) DEFAULT NULL,
+  `LINES_READ` bigint(20) DEFAULT NULL,
+  `LINES_WRITTEN` bigint(20) DEFAULT NULL,
+  `LINES_UPDATED` bigint(20) DEFAULT NULL,
+  `LINES_INPUT` bigint(20) DEFAULT NULL,
+  `LINES_OUTPUT` bigint(20) DEFAULT NULL,
+  `LINES_REJECTED` bigint(20) DEFAULT NULL,
+  `ERRORS` bigint(20) DEFAULT NULL,
+  `STARTDATE` datetime DEFAULT NULL,
+  `ENDDATE` datetime DEFAULT NULL,
+  `LOGDATE` datetime DEFAULT NULL,
+  `DEPDATE` datetime DEFAULT NULL,
+  `REPLAYDATE` datetime DEFAULT NULL,
+  `LOG_FIELD` mediumtext,
+  `EXECUTING_SERVER` varchar(255) DEFAULT NULL,
+  `EXECUTING_USER` varchar(255) DEFAULT NULL,
+  `CLIENT` varchar(255) DEFAULT NULL,
+  `PARANT_BATCH_ID` int(11) DEFAULT NULL,
+  KEY `IDX_tran_log_1` (`ID_BATCH`),
+  KEY `IDX_tran_log_2` (`ERRORS`,`STATUS`,`TRANSNAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Table structure for table `log_tran_channel` */
+
+DROP TABLE IF EXISTS `log_tran_channel`;
+
+CREATE TABLE `log_tran_channel` (
+  `ID_LOG` int(11) DEFAULT NULL,
+  `ID_BATCH` int(11) DEFAULT NULL,
+  `CHANNEL_ID` varchar(255) DEFAULT NULL,
+  `LOG_DATE` datetime DEFAULT NULL,
+  `LOGGING_OBJECT_TYPE` varchar(255) DEFAULT NULL,
+  `OBJECT_NAME` varchar(255) DEFAULT NULL,
+  `OBJECT_COPY` varchar(255) DEFAULT NULL,
+  `REPOSITORY_DIRECTORY` varchar(255) DEFAULT NULL,
+  `FILENAME` varchar(255) DEFAULT NULL,
+  `OBJECT_ID` varchar(255) DEFAULT NULL,
+  `OBJECT_REVISION` varchar(255) DEFAULT NULL,
+  `PARENT_CHANNEL_ID` varchar(255) DEFAULT NULL,
+  `ROOT_CHANNEL_ID` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Table structure for table `log_tran_metrics` */
+
+DROP TABLE IF EXISTS `log_tran_metrics`;
+
+CREATE TABLE `log_tran_metrics` (
+  `ID_LOG` int(11) DEFAULT NULL,
+  `ID_BATCH` int(11) DEFAULT NULL,
+  `CHANNEL_ID` varchar(255) DEFAULT NULL,
+  `LOG_DATE` datetime DEFAULT NULL,
+  `METRICS_DATE` datetime DEFAULT NULL,
+  `METRICS_CODE` varchar(255) DEFAULT NULL,
+  `METRICS_DESCRIPTION` varchar(255) DEFAULT NULL,
+  `METRICS_SUBJECT` varchar(255) DEFAULT NULL,
+  `METRICS_TYPE` varchar(255) DEFAULT NULL,
+  `METRICS_VALUE` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Table structure for table `log_tran_run` */
+
+DROP TABLE IF EXISTS `log_tran_run`;
+
+CREATE TABLE `log_tran_run` (
+  `ID_LOG` int(11) DEFAULT NULL,
+  `ID_BATCH` int(11) DEFAULT NULL,
+  `SEQ_NR` int(11) DEFAULT NULL,
+  `LOGDATE` datetime DEFAULT NULL,
+  `TRANSNAME` varchar(255) DEFAULT NULL,
+  `STEPNAME` varchar(255) DEFAULT NULL,
+  `STEP_COPY` int(11) DEFAULT NULL,
+  `LINES_READ` bigint(20) DEFAULT NULL,
+  `LINES_WRITTEN` bigint(20) DEFAULT NULL,
+  `LINES_UPDATED` bigint(20) DEFAULT NULL,
+  `LINES_INPUT` bigint(20) DEFAULT NULL,
+  `LINES_OUTPUT` bigint(20) DEFAULT NULL,
+  `LINES_REJECTED` bigint(20) DEFAULT NULL,
+  `ERRORS` bigint(20) DEFAULT NULL,
+  `INPUT_BUFFER_ROWS` bigint(20) DEFAULT NULL,
+  `OUTPUT_BUFFER_ROWS` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Table structure for table `log_tran_step` */
+
+DROP TABLE IF EXISTS `log_tran_step`;
+
+CREATE TABLE `log_tran_step` (
+  `ID_LOG` int(11) DEFAULT NULL,
+  `ID_BATCH` int(11) DEFAULT NULL,
+  `CHANNEL_ID` varchar(255) DEFAULT NULL,
+  `LOG_DATE` datetime DEFAULT NULL,
+  `TRANSNAME` varchar(255) DEFAULT NULL,
+  `STEPNAME` varchar(255) DEFAULT NULL,
+  `STEP_COPY` int(11) DEFAULT NULL,
+  `LINES_READ` bigint(20) DEFAULT NULL,
+  `LINES_WRITTEN` bigint(20) DEFAULT NULL,
+  `LINES_UPDATED` bigint(20) DEFAULT NULL,
+  `LINES_INPUT` bigint(20) DEFAULT NULL,
+  `LINES_OUTPUT` bigint(20) DEFAULT NULL,
+  `LINES_REJECTED` bigint(20) DEFAULT NULL,
+  `ERRORS` bigint(20) DEFAULT NULL,
+  `LOG_FIELD` mediumtext
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
 
 commit;
 
