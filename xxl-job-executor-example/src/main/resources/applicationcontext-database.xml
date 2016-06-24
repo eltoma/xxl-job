@@ -1,40 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans
-		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
-		
-	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="fileEncoding" value="utf-8" />
-		<property name="locations">
-			<list>
-				<value>classpath*:jdbc.properties</value>
-			</list>
-		</property>
-	</bean>
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"  destroy-method="close">  
-	    <property name="driverClass" value="${c3p0.driverClass}" />  
-	    <property name="jdbcUrl" value="${c3p0.url}" />  
-	    <property name="user" value="${c3p0.user}" />  
-	    <property name="password" value="${c3p0.password}" />  
-	    <property name="initialPoolSize" value="3" />  
-	    <property name="minPoolSize" value="2" />  
-	    <property name="maxPoolSize" value="10" />  
-	    <property name="maxIdleTime" value="60" />
-	    <property name="acquireRetryDelay" value="1000" />
-	    <property name="acquireRetryAttempts" value="10" />
-	    <property name="preferredTestQuery" value="SELECT 1" />
-	</bean>
-	
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="mapperLocations" value="classpath*:mybatis-mapper/*.xml"/>
-	</bean>
-    
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="fileEncoding" value="utf-8"/>
+        <property name="locations">
+            <list>
+                <value>classpath*:jdbc.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${c3p0.driverClass}"/>
+        <property name="jdbcUrl" value="${c3p0.url}"/>
+        <property name="user" value="${c3p0.user}"/>
+        <property name="password" value="${c3p0.password}"/>
+        <property name="initialPoolSize" value="3"/>
+        <property name="minPoolSize" value="2"/>
+        <property name="maxPoolSize" value="10"/>
+        <property name="maxIdleTime" value="60"/>
+        <property name="acquireRetryDelay" value="1000"/>
+        <property name="acquireRetryAttempts" value="10"/>
+        <property name="preferredTestQuery" value="SELECT 1"/>
+    </bean>
+
+    <!--<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="mapperLocations" value="classpath*:mybatis-mapper/*.xml"/>
+    </bean>-->
+
     <!-- scope must be "prototype" when junit -->
-    <bean id="sqlSessionTemplate"  class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">  
-          <constructor-arg index="0" ref="sqlSessionFactory" />  
-    </bean> 
-	
+    <!--<bean id="sqlSessionTemplate"  class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="sqlSessionFactory" />
+    </bean>-->
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath:mybatis-mapper/*.xml"></property>
+        <property name="configurationProperties">
+            <props>
+                <prop key="cacheEnabled">true</prop>
+                <prop key="lazyLoadingEnabled">false</prop><!-- 查询时，关闭关联对象即时加载以提高性能 -->
+                <prop key="aggressiveLazyLoading">true
+                </prop><!-- 设置关联对象加载的形态，此处为按需加载字段(加载字段由SQL指定)，不会加载关联表的所有字段，以提高性能 -->
+                <prop key="multipleResultSetsEnabled">true</prop><!-- 对于未知的SQL查询，允许返回不同的结果集以达到通用的效果 -->
+                <prop key="useColumnLabel">true</prop><!-- 允许使用列标签代替列名 -->
+                <prop key="useGeneratedKeys">true</prop><!-- 允许使用自定义的主键值(比如由程序生成的UUID 32位编码作为键值)，数据表的PK生成策略将被覆盖 -->
+                <prop key="autoMappingBehavior">FULL</prop><!-- 给予被嵌套的resultMap以字段-属性的映射支持 -->
+                <prop key="defaultExecutorType">BATCH</prop><!-- 对于批量更新操作缓存SQL以提高性能 -->
+                <prop key="defaultStatementTimeout">25000</prop><!-- 数据库超过25000秒仍未响应则超时 -->
+            </props>
+        </property>
+    </bean>
+
+    <!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.xxl.job.executor.loader.dao"></property>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
 </beans>
