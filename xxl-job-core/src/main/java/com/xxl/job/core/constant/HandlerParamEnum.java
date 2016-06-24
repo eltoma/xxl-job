@@ -40,5 +40,13 @@ public enum HandlerParamEnum {
     /**
      * log date
      */
-    LOG_DATE
+    LOG_DATE,
+    /**
+     * job handler name
+     */
+    JOB_HANDLER_NAME,
+    /**
+     * log type
+     */
+    LOG_TYPE
 }

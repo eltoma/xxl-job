@@ -11,6 +11,7 @@ import com.xxl.job.core.constant.ActionEnum;
 import com.xxl.job.core.constant.HandlerParamEnum;
 import com.xxl.job.core.util.CallBack;
 import com.xxl.job.core.util.HttpUtil;
+import com.xxl.job.core.util.JacksonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
@@ -73,7 +74,7 @@ public class JobLogController {
         int list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobName, triggerTimeStart, triggerTimeEnd);
 
         // package result
-        Map<String, Object> maps = new HashMap<String, Object>();
+        Map<String, Object> maps = new HashMap<>();
         maps.put("recordsTotal", list_count);        // 总记录数
         maps.put("recordsFiltered", list_count);    // 过滤后的总记录数
         maps.put("data", list);                    // 分页列表
@@ -100,7 +101,7 @@ public class JobLogController {
 
     @RequestMapping("/logDetail")
     @ResponseBody
-    public ReturnT<String> logDetail(int id) {
+    public ReturnT<String> logDetail(int id, String jobHandler, String logType) {
         // base check
         XxlJobLog log = xxlJobLogDao.load(id);
         if (log == null) {
@@ -116,18 +117,20 @@ public class JobLogController {
         reqMap.put(HandlerParamEnum.ACTION.name(), ActionEnum.LOG.name());
         reqMap.put(HandlerParamEnum.LOG_ID.name(), String.valueOf(id));
         reqMap.put(HandlerParamEnum.LOG_DATE.name(), String.valueOf(log.getTriggerTime().getTime()));
+        reqMap.put(HandlerParamEnum.LOG_TYPE.name(), logType);
+        reqMap.put(HandlerParamEnum.JOB_HANDLER_NAME.name(), jobHandler);
 
         CallBack callBack = HttpUtil.post(HttpUtil.addressToUrl(log.getExecutorAddress()), reqMap);
         if (callBack.isSuccess()) {
-            return new ReturnT<>(callBack.getMsg());
+            return new ReturnT<>(callBack.getData() == null ? null : callBack.getData().toString());
         } else {
             return new ReturnT<>(500, callBack.getMsg());
         }
     }
 
     @RequestMapping("/logDetailPage")
-    public String logDetailPage(int id, Model model) {
-        ReturnT<String> data = logDetail(id);
+    public String logDetailPage(int id, String jobHandler, String logType, Model model) {
+        ReturnT<String> data = logDetail(id, jobHandler, logType);
         model.addAttribute("result", data);
         return "joblog/logdetail";
     }
@@ -139,10 +142,10 @@ public class JobLogController {
         XxlJobLog log = xxlJobLogDao.load(id);
         XxlJobInfo jobInfo = xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
         if (log == null || jobInfo == null) {
-            return new ReturnT<String>(500, "参数异常");
+            return new ReturnT<>(500, "参数异常");
         }
         if (!CallBack.STATUS_SUCCESS.equals(log.getTriggerStatus())) {
-            return new ReturnT<String>(500, "调度失败，无法终止日志");
+            return new ReturnT<>(500, "调度失败，无法终止日志");
         }
 
         // request
@@ -160,9 +163,9 @@ public class JobLogController {
             log.setHandleMsg("人为操作主动终止");
             log.setHandleTime(new Date());
             xxlJobLogDao.updateHandleInfo(log);
-            return new ReturnT<String>(callBack.getMsg());
+            return new ReturnT<>(callBack.getMsg());
         } else {
-            return new ReturnT<String>(500, callBack.getMsg());
+            return new ReturnT<>(500, callBack.getMsg());
         }
     }
 }

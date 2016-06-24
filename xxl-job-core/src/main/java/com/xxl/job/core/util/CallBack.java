@@ -3,14 +3,16 @@ package com.xxl.job.core.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class CallBack {
+import java.io.Serializable;
+
+public class CallBack<T> {
     public static final String STATUS_SUCCESS = "SUCCESS";
     public static final String STATUS_FAIL = "FAIL";
 
     private String status;
     private Integer code;
     private String msg;
-    private Object data;
+    private T data;
 
     public CallBack() {
     }
@@ -24,7 +26,7 @@ public class CallBack {
         this.msg = msg;
     }
 
-    public CallBack(String status, Integer code, String msg, Object data) {
+    public CallBack(String status, Integer code, String msg, T data) {
         this.status = status;
         this.code = code;
         this.msg = msg;
@@ -33,12 +35,12 @@ public class CallBack {
 
     @JsonIgnore
     public boolean isSuccess() {
-        return status == STATUS_SUCCESS;
+        return STATUS_SUCCESS.equals(status);
     }
 
     @JsonIgnore
     public boolean isFail() {
-        return status == STATUS_FAIL;
+        return STATUS_FAIL.equals(status);
     }
 
     public void setStatus(String status) {
@@ -73,11 +75,11 @@ public class CallBack {
         return msg;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 
@@ -89,11 +91,11 @@ public class CallBack {
         return new CallBack(STATUS_SUCCESS, msg);
     }
 
-    public static CallBack success(String msg, Object data) {
-        return new CallBack(STATUS_SUCCESS, msg);
+    public static <R> CallBack<R> success(String msg, R data) {
+        return new CallBack(STATUS_SUCCESS, null, msg, data);
     }
 
-    public static CallBack successWithData(Object data) {
+    public static <R> CallBack<R> successWithData(R data) {
         return new CallBack(STATUS_SUCCESS, null, null, data);
     }
 
@@ -107,11 +109,11 @@ public class CallBack {
     }
 
 
-    public static CallBack fail(String msg, Object data) {
-        return new CallBack(STATUS_FAIL, msg);
+    public static <R> CallBack<R> fail(String msg, R data) {
+        return new CallBack(STATUS_FAIL, null, msg, data);
     }
 
-    public static CallBack failWithData(Object data) {
+    public static <R> CallBack<R> failWithData(R data) {
         return new CallBack(STATUS_FAIL, null, null, data);
     }
 

@@ -1,20 +1,13 @@
 package com.xxl.job.core.log;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import com.xxl.job.core.handler.Worker;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.LoggingEvent;
+
+import java.io.*;
+import java.util.Date;
 
 /**
  * store trigger log in each log-file
@@ -23,10 +16,9 @@ import org.apache.log4j.spi.LoggingEvent;
  */
 public class XxlJobFileAppender extends AppenderSkeleton {
 
-    public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     // trogger log file path
-    public static volatile String filePath;
+    public static  String filePath;
 
     public void setFilePath(String filePath) {
         XxlJobFileAppender.filePath = filePath;
@@ -46,7 +38,7 @@ public class XxlJobFileAppender extends AppenderSkeleton {
         }
 
         // filePath/yyyy-MM-dd/
-        String nowFormat = sdf.format(new Date());
+        String nowFormat = DateFormatUtils.ISO_DATE_FORMAT.format(new Date());
         File filePathDateDir = new File(filePathDir, nowFormat);
         if (!filePathDateDir.exists()) {
             filePathDateDir.mkdirs();
@@ -107,73 +99,6 @@ public class XxlJobFileAppender extends AppenderSkeleton {
         return false;
     }
 
-    /**
-     * support read log-file
-     *
-     * @param triggerDate
-     * @param trigger_log_id
-     * @return
-     */
-    public static String readLog(Date triggerDate, String trigger_log_id) {
-        if (triggerDate == null || trigger_log_id == null || trigger_log_id.trim().length() == 0) {
-            return null;
-        }
-
-        // filePath/
-        File filePathDir = new File(filePath);
-        if (!filePathDir.exists()) {
-            filePathDir.mkdirs();
-        }
-
-        // filePath/yyyy-MM-dd/
-        String nowFormat = sdf.format(triggerDate);
-        File filePathDateDir = new File(filePathDir, nowFormat);
-        if (!filePathDateDir.exists()) {
-            filePathDateDir.mkdirs();
-        }
-
-        // filePath/yyyy-MM-dd/9999.log
-        String logFileName = trigger_log_id.concat(".log");
-        File logFile = new File(filePathDateDir, logFileName);
-        if (!logFile.exists()) {
-            return null;
-        }
-
-        String logData = readLines(logFile);
-        return logData;
-    }
-
-    /**
-     * read log data
-     *
-     * @param logFile
-     * @return
-     */
-    public static String readLines(File logFile) {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile), "utf-8"));
-            if (reader != null) {
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line).append("\n");
-                }
-                return sb.toString();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return null;
-    }
 
     /**
      * read data from line num

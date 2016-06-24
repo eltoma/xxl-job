@@ -144,12 +144,6 @@
             <artifactId>guava</artifactId>
             <version>19.0</version>
         </dependency>
-        <!-- http://mvnrepository.com/artifact/org.apache.commons/commons-vfs2 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-vfs2</artifactId>
-            <version>2.1</version>
-        </dependency>
         <!-- http://mvnrepository.com/artifact/net.sourceforge.jexcelapi/jxl -->
         <dependency>
             <groupId>net.sourceforge.jexcelapi</groupId>
@@ -162,6 +156,13 @@
             <artifactId>commons-vfs2</artifactId>
             <version>2.1</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
