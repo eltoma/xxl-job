@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface LogKettleTranStepMapper {
-    List<LogKettleTranStep> selectByID_LOG(String ID_LOG);
+    List<LogKettleTranStep> selectByID_LOG(Long ID_LOG);
 }

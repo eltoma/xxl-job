@@ -30,26 +30,26 @@ public class LogReader4KettleTransHandler {
 
     @LogType("tran_log")
     public List<LogKettleTran> readTranLog(String triggerLogId, Date triggerDate) throws Exception {
-        return logKettleTranMapper.selectByID_LOG(triggerLogId);
+        return logKettleTranMapper.selectByID_LOG(Long.valueOf(triggerLogId));
     }
 
     @LogType("tran_metrics_log")
     public List<LogKettleTranMetrics> readTranMetricsLog(String triggerLogId, Date triggerDate) throws Exception {
-        return logKettleTranMetricsMapper.selectByID_LOG(triggerLogId);
+        return logKettleTranMetricsMapper.selectByID_LOG(Long.valueOf(triggerLogId));
     }
 
     @LogType("tran_channel_log")
     public List<LogKettleTranChannel> readTranChannelLog(String triggerLogId, Date triggerDate) throws Exception {
-        return logKettleTranChannelMapper.selectByID_LOG(triggerLogId);
+        return logKettleTranChannelMapper.selectByID_LOG(Long.valueOf(triggerLogId));
     }
 
     @LogType("tran_run_log")
     public List<LogKettleTranRun> readTranRunLog(String triggerLogId, Date triggerDate) throws Exception {
-        return logKettleTranRunMapper.selectByID_LOG(triggerLogId);
+        return logKettleTranRunMapper.selectByID_LOG(Long.valueOf(triggerLogId));
     }
 
     @LogType("tran_step_log")
     public List<LogKettleTranStep> readTranStepLog(String triggerLogId, Date triggerDate) throws Exception {
-        return logKettleTranStepMapper.selectByID_LOG(triggerLogId);
+        return logKettleTranStepMapper.selectByID_LOG(Long.valueOf(triggerLogId));
     }
 }

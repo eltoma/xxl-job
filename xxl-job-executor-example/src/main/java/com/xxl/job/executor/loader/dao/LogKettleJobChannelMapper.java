@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface LogKettleJobChannelMapper {
 
-    List<LogKettleJobChannel> selectByID_LOG(String ID_LOG);
+    List<LogKettleJobChannel> selectByID_LOG(Long ID_LOG);
 }

@@ -29,7 +29,7 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM log_kettle_tran_run AS t
-        WHERE t.ID_LOG = #{id,ID_LOG=VARCHAR}
+        WHERE t.ID_LOG = #{ID_LOG,jdbcType=INTEGER}
     </select>
 
 </mapper>

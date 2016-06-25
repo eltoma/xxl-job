@@ -21,10 +21,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by feiluo on 6/24/2016.
@@ -58,6 +55,10 @@ public class LogReaderRepository implements ApplicationContextAware {
             logger.error("call Log reader fail.", e);
             throw e;
         }
+    }
+
+    public Collection<String> getLogType(String jobHandlerName) {
+        return handlerTypeToMethod.row(jobHandlerName).keySet();
     }
 
     public Class<?> getLogReaderClass(String jobHandlerName, String logType) {

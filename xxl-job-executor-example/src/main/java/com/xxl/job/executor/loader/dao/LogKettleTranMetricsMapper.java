@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface LogKettleTranMetricsMapper {
-    List<LogKettleTranMetrics> selectByID_LOG(String ID_LOG);
+    List<LogKettleTranMetrics> selectByID_LOG(Long ID_LOG);
 }

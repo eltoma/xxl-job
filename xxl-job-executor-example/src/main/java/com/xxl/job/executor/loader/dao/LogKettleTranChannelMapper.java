@@ -8,6 +8,6 @@ import java.util.List;
 @Repository
 public interface LogKettleTranChannelMapper {
 
-    List<LogKettleTranChannel> selectByID_LOG(String ID_LOG);
+    List<LogKettleTranChannel> selectByID_LOG(Long ID_LOG);
 
 }

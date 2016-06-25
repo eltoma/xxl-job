@@ -128,10 +128,39 @@ public class JobLogController {
         }
     }
 
+    @RequestMapping("/logType")
+    @ResponseBody
+    public ReturnT<?> logType(int id, @RequestParam String jobHandler) {
+        // base check
+        XxlJobLog log = xxlJobLogDao.load(id);
+        if (log == null) {
+            return new ReturnT<>(500, "参数异常");
+        }
+        // trigger id, trigger time
+        Map<String, String> reqMap = Maps.newHashMap();
+        reqMap.put(HandlerParamEnum.TIMESTAMP.name(), String.valueOf(System.currentTimeMillis()));
+        reqMap.put(HandlerParamEnum.ACTION.name(), ActionEnum.LOG_TYPE.name());
+        reqMap.put(HandlerParamEnum.LOG_ID.name(), String.valueOf(id));
+        reqMap.put(HandlerParamEnum.LOG_DATE.name(), String.valueOf(log.getTriggerTime().getTime()));
+        reqMap.put(HandlerParamEnum.JOB_HANDLER_NAME.name(), jobHandler);
+
+        CallBack callBack = HttpUtil.post(HttpUtil.addressToUrl(log.getExecutorAddress()), reqMap);
+        if (callBack.isSuccess()) {
+            return new ReturnT<>(callBack.getData());
+        } else {
+            return new ReturnT<>(500, callBack.getMsg());
+        }
+    }
+
     @RequestMapping("/logDetailPage")
     public String logDetailPage(int id, String jobHandler, String logType, Model model) {
         ReturnT<?> data = logDetail(id, jobHandler, logType);
         model.addAttribute("result", data);
+        ReturnT<?> logTypes = logType(id, jobHandler);
+        model.addAttribute("logTypes", logTypes);
+        model.addAttribute("logId", id);
+        model.addAttribute("jobHandlerName", jobHandler);
+        model.addAttribute("currentLogType", logType);
         return "joblog/logdetail";
     }
 

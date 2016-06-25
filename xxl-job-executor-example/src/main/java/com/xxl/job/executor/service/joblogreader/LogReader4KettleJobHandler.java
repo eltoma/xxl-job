@@ -30,16 +30,16 @@ public class LogReader4KettleJobHandler {
 
     @LogType("job_log")
     public List<LogKettleJob> readJobLog(String triggerLogId, Date triggerDate) throws Exception {
-        return logKettleJobMapper.selectByID_LOG(triggerLogId);
+        return logKettleJobMapper.selectByID_LOG(Long.valueOf(triggerLogId));
     }
 
     @LogType("job_item_log")
     public List<LogKettleJobItem> readJobItemLog(String triggerLogId, Date triggerDate) throws Exception {
-        return logKettleJobItemMapper.selectByID_LOG(triggerLogId);
+        return logKettleJobItemMapper.selectByID_LOG(Long.valueOf(triggerLogId));
     }
 
     @LogType("job_channel_log")
     public List<LogKettleJobChannel> readJobChannelLog(String triggerLogId, Date triggerDate) throws Exception {
-        return logKettleJobChannelMapper.selectByID_LOG(triggerLogId);
+        return logKettleJobChannelMapper.selectByID_LOG(Long.valueOf(triggerLogId));
     }
 }

@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface LogKettleTranRunMapper {
-    List<LogKettleTranRun> selectByID_LOG(String ID_LOG);
+    List<LogKettleTranRun> selectByID_LOG(Long ID_LOG);
 }
