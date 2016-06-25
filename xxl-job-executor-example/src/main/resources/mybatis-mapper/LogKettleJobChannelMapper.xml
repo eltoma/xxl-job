@@ -1,116 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xxl.job.executor.loader.dao.LogKettleJobChannelMapper" >
-  <resultMap id="BaseResultMap" type="com.xxl.job.executor.loader.dao.model.LogKettleJobChannel" >
-    <result column="ID_LOG" property="ID_LOG" jdbcType="INTEGER" />
-    <result column="ID_BATCH" property="ID_BATCH" jdbcType="INTEGER" />
-    <result column="CHANNEL_ID" property="CHANNEL_ID" jdbcType="VARCHAR" />
-    <result column="LOG_DATE" property="LOG_DATE" jdbcType="TIMESTAMP" />
-    <result column="LOGGING_OBJECT_TYPE" property="LOGGING_OBJECT_TYPE" jdbcType="VARCHAR" />
-    <result column="OBJECT_NAME" property="OBJECT_NAME" jdbcType="VARCHAR" />
-    <result column="OBJECT_COPY" property="OBJECT_COPY" jdbcType="VARCHAR" />
-    <result column="REPOSITORY_DIRECTORY" property="REPOSITORY_DIRECTORY" jdbcType="VARCHAR" />
-    <result column="FILENAME" property="FILENAME" jdbcType="VARCHAR" />
-    <result column="OBJECT_ID" property="OBJECT_ID" jdbcType="VARCHAR" />
-    <result column="OBJECT_REVISION" property="OBJECT_REVISION" jdbcType="VARCHAR" />
-    <result column="PARENT_CHANNEL_ID" property="PARENT_CHANNEL_ID" jdbcType="VARCHAR" />
-    <result column="ROOT_CHANNEL_ID" property="ROOT_CHANNEL_ID" jdbcType="VARCHAR" />
-  </resultMap>
-  <insert id="insert" parameterType="com.xxl.job.executor.loader.dao.model.LogKettleJobChannel" >
-    insert into log_kettle_job_channel (ID_LOG, ID_BATCH, CHANNEL_ID, 
-      LOG_DATE, LOGGING_OBJECT_TYPE, OBJECT_NAME, 
-      OBJECT_COPY, REPOSITORY_DIRECTORY, FILENAME, 
-      OBJECT_ID, OBJECT_REVISION, PARENT_CHANNEL_ID, 
-      ROOT_CHANNEL_ID)
-    values (#{ID_LOG,jdbcType=INTEGER}, #{ID_BATCH,jdbcType=INTEGER}, #{CHANNEL_ID,jdbcType=VARCHAR}, 
-      #{LOG_DATE,jdbcType=TIMESTAMP}, #{LOGGING_OBJECT_TYPE,jdbcType=VARCHAR}, #{OBJECT_NAME,jdbcType=VARCHAR}, 
-      #{OBJECT_COPY,jdbcType=VARCHAR}, #{REPOSITORY_DIRECTORY,jdbcType=VARCHAR}, #{FILENAME,jdbcType=VARCHAR}, 
-      #{OBJECT_ID,jdbcType=VARCHAR}, #{OBJECT_REVISION,jdbcType=VARCHAR}, #{PARENT_CHANNEL_ID,jdbcType=VARCHAR}, 
-      #{ROOT_CHANNEL_ID,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.xxl.job.executor.loader.dao.model.LogKettleJobChannel" >
-    insert into log_kettle_job_channel
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="ID_LOG != null" >
-        ID_LOG,
-      </if>
-      <if test="ID_BATCH != null" >
-        ID_BATCH,
-      </if>
-      <if test="CHANNEL_ID != null" >
-        CHANNEL_ID,
-      </if>
-      <if test="LOG_DATE != null" >
-        LOG_DATE,
-      </if>
-      <if test="LOGGING_OBJECT_TYPE != null" >
-        LOGGING_OBJECT_TYPE,
-      </if>
-      <if test="OBJECT_NAME != null" >
-        OBJECT_NAME,
-      </if>
-      <if test="OBJECT_COPY != null" >
-        OBJECT_COPY,
-      </if>
-      <if test="REPOSITORY_DIRECTORY != null" >
-        REPOSITORY_DIRECTORY,
-      </if>
-      <if test="FILENAME != null" >
-        FILENAME,
-      </if>
-      <if test="OBJECT_ID != null" >
-        OBJECT_ID,
-      </if>
-      <if test="OBJECT_REVISION != null" >
-        OBJECT_REVISION,
-      </if>
-      <if test="PARENT_CHANNEL_ID != null" >
-        PARENT_CHANNEL_ID,
-      </if>
-      <if test="ROOT_CHANNEL_ID != null" >
-        ROOT_CHANNEL_ID,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="ID_LOG != null" >
-        #{ID_LOG,jdbcType=INTEGER},
-      </if>
-      <if test="ID_BATCH != null" >
-        #{ID_BATCH,jdbcType=INTEGER},
-      </if>
-      <if test="CHANNEL_ID != null" >
-        #{CHANNEL_ID,jdbcType=VARCHAR},
-      </if>
-      <if test="LOG_DATE != null" >
-        #{LOG_DATE,jdbcType=TIMESTAMP},
-      </if>
-      <if test="LOGGING_OBJECT_TYPE != null" >
-        #{LOGGING_OBJECT_TYPE,jdbcType=VARCHAR},
-      </if>
-      <if test="OBJECT_NAME != null" >
-        #{OBJECT_NAME,jdbcType=VARCHAR},
-      </if>
-      <if test="OBJECT_COPY != null" >
-        #{OBJECT_COPY,jdbcType=VARCHAR},
-      </if>
-      <if test="REPOSITORY_DIRECTORY != null" >
-        #{REPOSITORY_DIRECTORY,jdbcType=VARCHAR},
-      </if>
-      <if test="FILENAME != null" >
-        #{FILENAME,jdbcType=VARCHAR},
-      </if>
-      <if test="OBJECT_ID != null" >
-        #{OBJECT_ID,jdbcType=VARCHAR},
-      </if>
-      <if test="OBJECT_REVISION != null" >
-        #{OBJECT_REVISION,jdbcType=VARCHAR},
-      </if>
-      <if test="PARENT_CHANNEL_ID != null" >
-        #{PARENT_CHANNEL_ID,jdbcType=VARCHAR},
-      </if>
-      <if test="ROOT_CHANNEL_ID != null" >
-        #{ROOT_CHANNEL_ID,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
+<mapper namespace="com.xxl.job.executor.loader.dao.LogKettleJobChannelMapper">
+    <resultMap id="BaseResultMap" type="com.xxl.job.executor.loader.dao.model.LogKettleJobChannel">
+        <result column="ID_LOG" property="ID_LOG" jdbcType="INTEGER"/>
+        <result column="ID_BATCH" property="ID_BATCH" jdbcType="INTEGER"/>
+        <result column="CHANNEL_ID" property="CHANNEL_ID" jdbcType="VARCHAR"/>
+        <result column="LOG_DATE" property="LOG_DATE" jdbcType="TIMESTAMP"/>
+        <result column="LOGGING_OBJECT_TYPE" property="LOGGING_OBJECT_TYPE" jdbcType="VARCHAR"/>
+        <result column="OBJECT_NAME" property="OBJECT_NAME" jdbcType="VARCHAR"/>
+        <result column="OBJECT_COPY" property="OBJECT_COPY" jdbcType="VARCHAR"/>
+        <result column="REPOSITORY_DIRECTORY" property="REPOSITORY_DIRECTORY" jdbcType="VARCHAR"/>
+        <result column="FILENAME" property="FILENAME" jdbcType="VARCHAR"/>
+        <result column="OBJECT_ID" property="OBJECT_ID" jdbcType="VARCHAR"/>
+        <result column="OBJECT_REVISION" property="OBJECT_REVISION" jdbcType="VARCHAR"/>
+        <result column="PARENT_CHANNEL_ID" property="PARENT_CHANNEL_ID" jdbcType="VARCHAR"/>
+        <result column="ROOT_CHANNEL_ID" property="ROOT_CHANNEL_ID" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+       ID_LOG,ID_BATCH,CHANNEL_ID,LOG_DATE,LOGGING_OBJECT_TYPE,OBJECT_NAME,OBJECT_COPY,REPOSITORY_DIRECTORY,
+       FILENAME,OBJECT_ID,OBJECT_REVISION,PARENT_CHANNEL_ID,ROOT_CHANNEL_ID
+    </sql>
+
+    <select id="selectByID_LOG" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM log_kettle_job_channel AS t
+        WHERE t.ID_LOG = #{id,ID_LOG=VARCHAR}
+    </select>
+
 </mapper>

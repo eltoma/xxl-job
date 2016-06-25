@@ -6,11 +6,12 @@ import com.xxl.job.executor.loader.dao.*;
 import com.xxl.job.executor.loader.dao.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
+ * read log for kettle trans handler
+ * <p>
  * Created by feiluo on 6/24/2016.
  */
 @LogReader(forJobHandler = "KettleTransHandler")
@@ -29,26 +30,26 @@ public class LogReader4KettleTransHandler {
 
     @LogType("tran_log")
     public List<LogKettleTran> readTranLog(String triggerLogId, Date triggerDate) throws Exception {
-        return null;
+        return logKettleTranMapper.selectByID_LOG(triggerLogId);
     }
 
     @LogType("tran_metrics_log")
     public List<LogKettleTranMetrics> readTranMetricsLog(String triggerLogId, Date triggerDate) throws Exception {
-        return null;
+        return logKettleTranMetricsMapper.selectByID_LOG(triggerLogId);
     }
 
     @LogType("tran_channel_log")
     public List<LogKettleTranChannel> readTranChannelLog(String triggerLogId, Date triggerDate) throws Exception {
-        return null;
+        return logKettleTranChannelMapper.selectByID_LOG(triggerLogId);
     }
 
     @LogType("tran_run_log")
     public List<LogKettleTranRun> readTranRunLog(String triggerLogId, Date triggerDate) throws Exception {
-        return null;
+        return logKettleTranRunMapper.selectByID_LOG(triggerLogId);
     }
 
     @LogType("tran_step_log")
     public List<LogKettleTranStep> readTranStepLog(String triggerLogId, Date triggerDate) throws Exception {
-        return null;
+        return logKettleTranStepMapper.selectByID_LOG(triggerLogId);
     }
 }

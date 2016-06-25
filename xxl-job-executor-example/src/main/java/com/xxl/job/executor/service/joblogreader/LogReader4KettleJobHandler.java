@@ -10,11 +10,12 @@ import com.xxl.job.executor.loader.dao.model.LogKettleJobChannel;
 import com.xxl.job.executor.loader.dao.model.LogKettleJobItem;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
+ * read log for kettle job handler
+ * <p>
  * Created by feiluo on 6/24/2016.
  */
 @LogReader(forJobHandler = "KettleJobHandler")
@@ -29,16 +30,16 @@ public class LogReader4KettleJobHandler {
 
     @LogType("job_log")
     public List<LogKettleJob> readJobLog(String triggerLogId, Date triggerDate) throws Exception {
-        return null;
+        return logKettleJobMapper.selectByID_LOG(triggerLogId);
     }
 
     @LogType("job_item_log")
     public List<LogKettleJobItem> readJobItemLog(String triggerLogId, Date triggerDate) throws Exception {
-        return null;
+        return logKettleJobItemMapper.selectByID_LOG(triggerLogId);
     }
 
     @LogType("job_channel_log")
     public List<LogKettleJobChannel> readJobChannelLog(String triggerLogId, Date triggerDate) throws Exception {
-        return null;
+        return logKettleJobChannelMapper.selectByID_LOG(triggerLogId);
     }
 }

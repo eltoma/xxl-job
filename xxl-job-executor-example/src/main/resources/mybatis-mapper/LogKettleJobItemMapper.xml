@@ -1,160 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xxl.job.executor.loader.dao.LogKettleJobItemMapper" >
-  <resultMap id="BaseResultMap" type="com.xxl.job.executor.loader.dao.model.LogKettleJobItem" >
-    <result column="ID_LOG" property="ID_LOG" jdbcType="INTEGER" />
-    <result column="ID_BATCH" property="ID_BATCH" jdbcType="INTEGER" />
-    <result column="CHANNEL_ID" property="CHANNEL_ID" jdbcType="VARCHAR" />
-    <result column="LOG_DATE" property="LOG_DATE" jdbcType="TIMESTAMP" />
-    <result column="TRANSNAME" property="TRANSNAME" jdbcType="VARCHAR" />
-    <result column="STEPNAME" property="STEPNAME" jdbcType="VARCHAR" />
-    <result column="LINES_READ" property="LINES_READ" jdbcType="BIGINT" />
-    <result column="LINES_WRITTEN" property="LINES_WRITTEN" jdbcType="BIGINT" />
-    <result column="LINES_UPDATED" property="LINES_UPDATED" jdbcType="BIGINT" />
-    <result column="LINES_INPUT" property="LINES_INPUT" jdbcType="BIGINT" />
-    <result column="LINES_OUTPUT" property="LINES_OUTPUT" jdbcType="BIGINT" />
-    <result column="LINES_REJECTED" property="LINES_REJECTED" jdbcType="BIGINT" />
-    <result column="ERRORS" property="ERRORS" jdbcType="BIGINT" />
-    <result column="RESULT" property="RESULT" jdbcType="BIT" />
-    <result column="NR_RESULT_ROWS" property="NR_RESULT_ROWS" jdbcType="BIGINT" />
-    <result column="NR_RESULT_FILES" property="NR_RESULT_FILES" jdbcType="BIGINT" />
-    <result column="COPY_NR" property="COPY_NR" jdbcType="INTEGER" />
-  </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.xxl.job.executor.loader.dao.model.LogKettleJobItem" extends="BaseResultMap" >
-    <result column="LOG_FIELD" property="LOG_FIELD" jdbcType="LONGVARCHAR" />
-  </resultMap>
-  <sql id="Blob_Column_List" >
-    LOG_FIELD
-  </sql>
-  <insert id="insert" parameterType="com.xxl.job.executor.loader.dao.model.LogKettleJobItem" >
-    insert into log_kettle_job_item (ID_LOG, ID_BATCH, CHANNEL_ID, 
-      LOG_DATE, TRANSNAME, STEPNAME, 
-      LINES_READ, LINES_WRITTEN, LINES_UPDATED, 
-      LINES_INPUT, LINES_OUTPUT, LINES_REJECTED, 
-      ERRORS, RESULT, NR_RESULT_ROWS, 
-      NR_RESULT_FILES, COPY_NR, LOG_FIELD
-      )
-    values (#{ID_LOG,jdbcType=INTEGER}, #{ID_BATCH,jdbcType=INTEGER}, #{CHANNEL_ID,jdbcType=VARCHAR}, 
-      #{LOG_DATE,jdbcType=TIMESTAMP}, #{TRANSNAME,jdbcType=VARCHAR}, #{STEPNAME,jdbcType=VARCHAR}, 
-      #{LINES_READ,jdbcType=BIGINT}, #{LINES_WRITTEN,jdbcType=BIGINT}, #{LINES_UPDATED,jdbcType=BIGINT}, 
-      #{LINES_INPUT,jdbcType=BIGINT}, #{LINES_OUTPUT,jdbcType=BIGINT}, #{LINES_REJECTED,jdbcType=BIGINT}, 
-      #{ERRORS,jdbcType=BIGINT}, #{RESULT,jdbcType=BIT}, #{NR_RESULT_ROWS,jdbcType=BIGINT}, 
-      #{NR_RESULT_FILES,jdbcType=BIGINT}, #{COPY_NR,jdbcType=INTEGER}, #{LOG_FIELD,jdbcType=LONGVARCHAR}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.xxl.job.executor.loader.dao.model.LogKettleJobItem" >
-    insert into log_kettle_job_item
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="ID_LOG != null" >
-        ID_LOG,
-      </if>
-      <if test="ID_BATCH != null" >
-        ID_BATCH,
-      </if>
-      <if test="CHANNEL_ID != null" >
-        CHANNEL_ID,
-      </if>
-      <if test="LOG_DATE != null" >
-        LOG_DATE,
-      </if>
-      <if test="TRANSNAME != null" >
-        TRANSNAME,
-      </if>
-      <if test="STEPNAME != null" >
-        STEPNAME,
-      </if>
-      <if test="LINES_READ != null" >
-        LINES_READ,
-      </if>
-      <if test="LINES_WRITTEN != null" >
-        LINES_WRITTEN,
-      </if>
-      <if test="LINES_UPDATED != null" >
-        LINES_UPDATED,
-      </if>
-      <if test="LINES_INPUT != null" >
-        LINES_INPUT,
-      </if>
-      <if test="LINES_OUTPUT != null" >
-        LINES_OUTPUT,
-      </if>
-      <if test="LINES_REJECTED != null" >
-        LINES_REJECTED,
-      </if>
-      <if test="ERRORS != null" >
-        ERRORS,
-      </if>
-      <if test="RESULT != null" >
-        RESULT,
-      </if>
-      <if test="NR_RESULT_ROWS != null" >
-        NR_RESULT_ROWS,
-      </if>
-      <if test="NR_RESULT_FILES != null" >
-        NR_RESULT_FILES,
-      </if>
-      <if test="COPY_NR != null" >
-        COPY_NR,
-      </if>
-      <if test="LOG_FIELD != null" >
-        LOG_FIELD,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="ID_LOG != null" >
-        #{ID_LOG,jdbcType=INTEGER},
-      </if>
-      <if test="ID_BATCH != null" >
-        #{ID_BATCH,jdbcType=INTEGER},
-      </if>
-      <if test="CHANNEL_ID != null" >
-        #{CHANNEL_ID,jdbcType=VARCHAR},
-      </if>
-      <if test="LOG_DATE != null" >
-        #{LOG_DATE,jdbcType=TIMESTAMP},
-      </if>
-      <if test="TRANSNAME != null" >
-        #{TRANSNAME,jdbcType=VARCHAR},
-      </if>
-      <if test="STEPNAME != null" >
-        #{STEPNAME,jdbcType=VARCHAR},
-      </if>
-      <if test="LINES_READ != null" >
-        #{LINES_READ,jdbcType=BIGINT},
-      </if>
-      <if test="LINES_WRITTEN != null" >
-        #{LINES_WRITTEN,jdbcType=BIGINT},
-      </if>
-      <if test="LINES_UPDATED != null" >
-        #{LINES_UPDATED,jdbcType=BIGINT},
-      </if>
-      <if test="LINES_INPUT != null" >
-        #{LINES_INPUT,jdbcType=BIGINT},
-      </if>
-      <if test="LINES_OUTPUT != null" >
-        #{LINES_OUTPUT,jdbcType=BIGINT},
-      </if>
-      <if test="LINES_REJECTED != null" >
-        #{LINES_REJECTED,jdbcType=BIGINT},
-      </if>
-      <if test="ERRORS != null" >
-        #{ERRORS,jdbcType=BIGINT},
-      </if>
-      <if test="RESULT != null" >
-        #{RESULT,jdbcType=BIT},
-      </if>
-      <if test="NR_RESULT_ROWS != null" >
-        #{NR_RESULT_ROWS,jdbcType=BIGINT},
-      </if>
-      <if test="NR_RESULT_FILES != null" >
-        #{NR_RESULT_FILES,jdbcType=BIGINT},
-      </if>
-      <if test="COPY_NR != null" >
-        #{COPY_NR,jdbcType=INTEGER},
-      </if>
-      <if test="LOG_FIELD != null" >
-        #{LOG_FIELD,jdbcType=LONGVARCHAR},
-      </if>
-    </trim>
-  </insert>
+<mapper namespace="com.xxl.job.executor.loader.dao.LogKettleJobItemMapper">
+    <resultMap id="BaseResultMap" type="com.xxl.job.executor.loader.dao.model.LogKettleJobItem">
+        <result column="ID_LOG" property="ID_LOG" jdbcType="INTEGER"/>
+        <result column="ID_BATCH" property="ID_BATCH" jdbcType="INTEGER"/>
+        <result column="CHANNEL_ID" property="CHANNEL_ID" jdbcType="VARCHAR"/>
+        <result column="LOG_DATE" property="LOG_DATE" jdbcType="TIMESTAMP"/>
+        <result column="TRANSNAME" property="TRANSNAME" jdbcType="VARCHAR"/>
+        <result column="STEPNAME" property="STEPNAME" jdbcType="VARCHAR"/>
+        <result column="LINES_READ" property="LINES_READ" jdbcType="BIGINT"/>
+        <result column="LINES_WRITTEN" property="LINES_WRITTEN" jdbcType="BIGINT"/>
+        <result column="LINES_UPDATED" property="LINES_UPDATED" jdbcType="BIGINT"/>
+        <result column="LINES_INPUT" property="LINES_INPUT" jdbcType="BIGINT"/>
+        <result column="LINES_OUTPUT" property="LINES_OUTPUT" jdbcType="BIGINT"/>
+        <result column="LINES_REJECTED" property="LINES_REJECTED" jdbcType="BIGINT"/>
+        <result column="ERRORS" property="ERRORS" jdbcType="BIGINT"/>
+        <result column="RESULT" property="RESULT" jdbcType="BIT"/>
+        <result column="NR_RESULT_ROWS" property="NR_RESULT_ROWS" jdbcType="BIGINT"/>
+        <result column="NR_RESULT_FILES" property="NR_RESULT_FILES" jdbcType="BIGINT"/>
+        <result column="LOG_FIELD" property="LOG_FIELD" jdbcType="LONGVARCHAR"/>
+        <result column="COPY_NR" property="COPY_NR" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    ID_LOG,ID_BATCH,CHANNEL_ID,LOG_DATE,TRANSNAME,STEPNAME,LINES_READ,LINES_WRITTEN,LINES_UPDATED,LINES_INPUT,LINES_OUTPUT,
+    LINES_REJECTED,ERRORS,RESULT,NR_RESULT_ROWS,NR_RESULT_FILES,LOG_FIELD,COPY_NR
+    </sql>
+
+    <select id="selectByID_LOG" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM log_kettle_job_item AS t
+        WHERE t.ID_LOG = #{id,ID_LOG=VARCHAR}
+    </select>
 </mapper>
