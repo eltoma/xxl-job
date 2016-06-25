@@ -9,6 +9,7 @@ import com.xxl.job.core.util.CallBack;
  */
 public abstract class IJobHandler {
 
+
     /**
      * job handler <br><br>
      * the return Object will be and stored
@@ -19,5 +20,16 @@ public abstract class IJobHandler {
      */
     public abstract CallBack execute(String... params) throws Exception;
 
+    /**
+     * call after job handler execute
+     *
+     * @param callBack
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    public CallBack postExecute(CallBack callBack, String... params) throws Exception {
+        return callBack;
+    }
 
 }

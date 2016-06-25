@@ -18,6 +18,11 @@ public class JobHandlerProxy extends IJobHandler {
         return jobHandler.execute(params);
     }
 
+    @Override
+    public CallBack postExecute(CallBack callBack, String... params) throws Exception {
+        return jobHandler.postExecute(callBack, params);
+    }
+
     public void init() {
         //TODO: 6/22/2016 jobHandler参数解析器
         // 检查缓存

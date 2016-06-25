@@ -7,6 +7,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -16,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by feiluo on 6/22/2016.
  */
-@Component
+@Service
 public class WorkerRepository implements ApplicationContextAware {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkerRepository.class);

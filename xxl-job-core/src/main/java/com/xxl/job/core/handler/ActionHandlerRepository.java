@@ -14,6 +14,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * @author xuxueli 2015-12-19 19:28:44
  */
-@Component
+@Service
 public class ActionHandlerRepository implements ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(ActionHandlerRepository.class);
 
