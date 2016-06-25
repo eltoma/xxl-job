@@ -35,8 +35,9 @@ public class ActionHandlerRepository implements ApplicationContextAware {
 
     // handler push to queue
     public static CallBack service(Map<String, String> _param) {
-        logger.debug(">>>>>>>>>>> xxl-job service start, _param:{}", new Object[]{_param});
-
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>>>>>>>>>> xxl-job service start, _param:{}", new Object[]{_param});
+        }
         // check namespace
         String namespace = _param.get(HandlerParamEnum.ACTION.name());
         if (namespace == null || namespace.trim().length() == 0) {
@@ -50,7 +51,7 @@ public class ActionHandlerRepository implements ApplicationContextAware {
             return CallBack.fail("Timestamp check failed.");
         }
         if (actionHandlerMap == null) {
-            logger.warn("action handler not found!");
+            logger.warn("action handler not init!");
             return CallBack.fail("action handler not init!");
         }
 
@@ -62,7 +63,9 @@ public class ActionHandlerRepository implements ApplicationContextAware {
             logger.error("param[Action] is not valid.");
             return CallBack.fail("param[Action] is not valid.");
         }
-        logger.debug(">>>>>>>>>>> xxl-job service end, triggerData:{}");
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>>>>>>>>>> xxl-job service end, triggerData:{}");
+        }
         return callAction(actionHandlerClasses, _param, true);
     }
 

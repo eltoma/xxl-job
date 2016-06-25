@@ -15,12 +15,10 @@ public class JobHandlerProxy extends IJobHandler {
 
     @Override
     public CallBack execute(String... params) throws Exception {
-        return jobHandler.execute(params);
-    }
-
-    @Override
-    public CallBack postExecute(CallBack callBack, String... params) throws Exception {
-        return jobHandler.postExecute(callBack, params);
+        String[] preExecuteParams = jobHandler.perExecute(params);
+        CallBack callBack = jobHandler.execute(preExecuteParams);
+        callBack = jobHandler.postExecute(callBack, preExecuteParams);
+        return callBack;
     }
 
     public void init() {

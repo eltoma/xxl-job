@@ -25,6 +25,6 @@ public @interface LogType {
      *
      * @return
      */
-    String value() default "";
+    String[] value() default {};
 
 }

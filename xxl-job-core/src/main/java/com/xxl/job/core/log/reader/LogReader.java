@@ -24,14 +24,4 @@ public @interface LogReader {
      */
     String forJobHandler();
 
-    /**
-     * log type
-     * <p>
-     * Distinguish between the different logs.
-     * you can Override by @LogType.
-     *
-     * @return
-     */
-    String logType() default "";
-
 }

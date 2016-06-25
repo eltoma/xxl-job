@@ -11,6 +11,17 @@ public abstract class IJobHandler {
 
 
     /**
+     * call before job handler execute
+     *
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    public String[] perExecute(String... params) throws Exception {
+        return params;
+    }
+
+    /**
      * job handler <br><br>
      * the return Object will be and stored
      *

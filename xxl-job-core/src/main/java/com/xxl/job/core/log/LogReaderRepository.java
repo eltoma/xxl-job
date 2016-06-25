@@ -7,6 +7,7 @@ import com.google.common.collect.Table;
 import com.xxl.job.core.log.reader.DefaultFileLogReader;
 import com.xxl.job.core.log.reader.LogReader;
 import com.xxl.job.core.log.reader.LogType;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -103,7 +105,6 @@ public class LogReaderRepository implements ApplicationContextAware {
         for (Map.Entry<String, Object> entry : serviceBeanMap.entrySet()) {
             LogReader logReader = entry.getValue().getClass().getAnnotation(LogReader.class);
             String forJobHandler = logReader.forJobHandler();
-            String logType = logReader.logType();
             if (LOG_READER_DEFAULT_NAME.equals(logReader.forJobHandler())) {
                 //默认日志处理
                 LOG_READER_DEFAULT_CLASS = entry.getValue().getClass();
@@ -118,11 +119,11 @@ public class LogReaderRepository implements ApplicationContextAware {
                 // 没有@LogType标识时，使用唯一方法处理
                 Method[] methods = targetClass.getMethods();
                 if (methods.length == 1) {
-                    builderHelper.builder(forJobHandler, logType, targetClass, methods[0], true);
+                    builderHelper.builder(forJobHandler, targetClass, methods[0]);
                 }
             } else {
                 // 添加所有包含@LogType的方法
-                builderHelper.builder(forJobHandler, logType, targetClass, methodsListHasLogType, false);
+                builderHelper.builder(forJobHandler, targetClass, methodsListHasLogType);
             }
 
         }
@@ -148,16 +149,14 @@ public class LogReaderRepository implements ApplicationContextAware {
             handlerToClassBuilder = ImmutableMap.builder();
         }
 
-        public void builder(String forJobHandler, String superLogType, Class<?> forClass, Method method, boolean focousAdd) {
+        public void builder(String forJobHandler, Class<?> forClass, Method method) {
             LogType logTypeAnnotation = method.getAnnotation(LogType.class);
-            if (!focousAdd && logTypeAnnotation == null) {
+            if (logTypeAnnotation == null) {
                 return;
             }
             canLogReaderInvoke(forClass, method);
-            if (logTypeAnnotation != null && StringUtils.isNotBlank(logTypeAnnotation.value())) {
-                superLogType = logTypeAnnotation.value();
-            }
-            if (StringUtils.isBlank(superLogType)) {
+            String[] logTypes = logTypeAnnotation.value();
+            if (ArrayUtils.isEmpty(logTypes)) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("log reader class regist [{}]<-[{}]", new Object[]{forJobHandler, forClass.getName()});
                     logger.debug("log reader method regist [{}]<-[{}]", new Object[]{forJobHandler, method.getName()});
@@ -165,24 +164,29 @@ public class LogReaderRepository implements ApplicationContextAware {
                 handlerToClassBuilder.put(forJobHandler, forClass);
                 handlerToMethodBuilder.put(forJobHandler, method);
             } else {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("log reader class regist [{},{}]<-[{}]", new Object[]{forJobHandler, superLogType, forClass.getName()});
-                    logger.debug("log reader method regist [{},{}]<-[{}]", new Object[]{forJobHandler, superLogType, method.getName()});
+                for (String logType : logTypes) {
+                    if (StringUtils.isBlank(logType)) {
+                        continue;
+                    }
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("log reader class regist [{},{}]<-[{}]", new Object[]{forJobHandler, logType, forClass.getName()});
+                        logger.debug("log reader method regist [{},{}]<-[{}]", new Object[]{forJobHandler, logType, method.getName()});
+                    }
+                    handlerTypeToClassBuilder.put(forJobHandler, logType, forClass);
+                    handlerTypeToMethodBuilder.put(forJobHandler, logType, method);
                 }
-                handlerTypeToClassBuilder.put(forJobHandler, superLogType, forClass);
-                handlerTypeToMethodBuilder.put(forJobHandler, superLogType, method);
             }
         }
 
-        public void builder(String forJobHandler, String superLogType, Class<?> forClass, Method[] methods, boolean focousAdd) {
+        public void builder(String forJobHandler, Class<?> forClass, Method[] methods) {
             for (Method method : methods) {
-                builder(forJobHandler, superLogType, forClass, method, focousAdd);
+                builder(forJobHandler, forClass, method);
             }
         }
 
-        public void builder(String forJobHandler, String superLogType, Class<?> forClass, Iterable<Method> methods, boolean focousAdd) {
+        public void builder(String forJobHandler, Class<?> forClass, Iterable<Method> methods) {
             for (Method method : methods) {
-                builder(forJobHandler, superLogType, forClass, method, focousAdd);
+                builder(forJobHandler, forClass, method);
             }
         }
 
