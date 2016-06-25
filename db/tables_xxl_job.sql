@@ -63,7 +63,7 @@ CREATE TABLE XXL_JOB_QRTZ_CRON_TRIGGERS
 );
 
 CREATE TABLE XXL_JOB_QRTZ_SIMPROP_TRIGGERS
-  (          
+  (
     SCHED_NAME VARCHAR(120) NOT NULL,
     TRIGGER_NAME VARCHAR(200) NOT NULL,
     TRIGGER_GROUP VARCHAR(200) NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE XXL_JOB_QRTZ_SIMPROP_TRIGGERS
     BOOL_PROP_1 VARCHAR(1) NULL,
     BOOL_PROP_2 VARCHAR(1) NULL,
     PRIMARY KEY (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP),
-    FOREIGN KEY (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP) 
+    FOREIGN KEY (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP)
     REFERENCES XXL_JOB_QRTZ_TRIGGERS(SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP)
 );
 
@@ -105,7 +105,7 @@ CREATE TABLE XXL_JOB_QRTZ_CALENDARS
 CREATE TABLE XXL_JOB_QRTZ_PAUSED_TRIGGER_GRPS
   (
     SCHED_NAME VARCHAR(120) NOT NULL,
-    TRIGGER_GROUP  VARCHAR(200) NOT NULL, 
+    TRIGGER_GROUP  VARCHAR(200) NOT NULL,
     PRIMARY KEY (SCHED_NAME,TRIGGER_GROUP)
 );
 
@@ -139,7 +139,7 @@ CREATE TABLE XXL_JOB_QRTZ_SCHEDULER_STATE
 CREATE TABLE XXL_JOB_QRTZ_LOCKS
   (
     SCHED_NAME VARCHAR(120) NOT NULL,
-    LOCK_NAME  VARCHAR(40) NOT NULL, 
+    LOCK_NAME  VARCHAR(40) NOT NULL,
     PRIMARY KEY (SCHED_NAME,LOCK_NAME)
 );
 
@@ -196,11 +196,9 @@ CREATE TABLE `xxl_job_qrtz_trigger_logglue` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 
-/*Table structure for table `log_job` */
+/*Table structure for table `log_kettle_job` */
 
-DROP TABLE IF EXISTS `log_job`;
-
-CREATE TABLE `log_job` (
+CREATE TABLE `log_kettle_job` (
   `ID_LOG` int(11) DEFAULT NULL,
   `ID_JOB` int(11) DEFAULT NULL,
   `CHANNEL_ID` varchar(255) DEFAULT NULL,
@@ -227,11 +225,9 @@ CREATE TABLE `log_job` (
   KEY `IDX_job_log_2` (`ERRORS`,`STATUS`,`JOBNAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Table structure for table `log_job_channel` */
+/*Table structure for table `log_kettle_job_channel` */
 
-DROP TABLE IF EXISTS `log_job_channel`;
-
-CREATE TABLE `log_job_channel` (
+CREATE TABLE `log_kettle_job_channel` (
   `ID_LOG` int(11) DEFAULT NULL,
   `ID_BATCH` int(11) DEFAULT NULL,
   `CHANNEL_ID` varchar(255) DEFAULT NULL,
@@ -247,11 +243,9 @@ CREATE TABLE `log_job_channel` (
   `ROOT_CHANNEL_ID` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Table structure for table `log_job_item` */
+/*Table structure for table `log_kettle_job_item` */
 
-DROP TABLE IF EXISTS `log_job_item`;
-
-CREATE TABLE `log_job_item` (
+CREATE TABLE `log_kettle_job_item` (
   `ID_LOG` int(11) DEFAULT NULL,
   `ID_BATCH` int(11) DEFAULT NULL,
   `CHANNEL_ID` varchar(255) DEFAULT NULL,
@@ -273,11 +267,9 @@ CREATE TABLE `log_job_item` (
   KEY `IDX_job_item_log_1` (`ID_BATCH`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Table structure for table `log_tran` */
+/*Table structure for table `log_kettle_tran` */
 
-DROP TABLE IF EXISTS `log_tran`;
-
-CREATE TABLE `log_tran` (
+CREATE TABLE `log_kettle_tran` (
   `ID_LOG` int(11) DEFAULT NULL,
   `ID_BATCH` int(11) DEFAULT NULL,
   `CHANNEL_ID` varchar(255) DEFAULT NULL,
@@ -304,11 +296,9 @@ CREATE TABLE `log_tran` (
   KEY `IDX_tran_log_2` (`ERRORS`,`STATUS`,`TRANSNAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Table structure for table `log_tran_channel` */
+/*Table structure for table `log_kettle_tran_channel` */
 
-DROP TABLE IF EXISTS `log_tran_channel`;
-
-CREATE TABLE `log_tran_channel` (
+CREATE TABLE `log_kettle_tran_channel` (
   `ID_LOG` int(11) DEFAULT NULL,
   `ID_BATCH` int(11) DEFAULT NULL,
   `CHANNEL_ID` varchar(255) DEFAULT NULL,
@@ -324,11 +314,9 @@ CREATE TABLE `log_tran_channel` (
   `ROOT_CHANNEL_ID` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Table structure for table `log_tran_metrics` */
+/*Table structure for table `log_kettle_tran_metrics` */
 
-DROP TABLE IF EXISTS `log_tran_metrics`;
-
-CREATE TABLE `log_tran_metrics` (
+CREATE TABLE `log_kettle_tran_metrics` (
   `ID_LOG` int(11) DEFAULT NULL,
   `ID_BATCH` int(11) DEFAULT NULL,
   `CHANNEL_ID` varchar(255) DEFAULT NULL,
@@ -341,11 +329,9 @@ CREATE TABLE `log_tran_metrics` (
   `METRICS_VALUE` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Table structure for table `log_tran_run` */
+/*Table structure for table `log_kettle_tran_run` */
 
-DROP TABLE IF EXISTS `log_tran_run`;
-
-CREATE TABLE `log_tran_run` (
+CREATE TABLE `log_kettle_tran_run` (
   `ID_LOG` int(11) DEFAULT NULL,
   `ID_BATCH` int(11) DEFAULT NULL,
   `SEQ_NR` int(11) DEFAULT NULL,
@@ -364,11 +350,9 @@ CREATE TABLE `log_tran_run` (
   `OUTPUT_BUFFER_ROWS` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Table structure for table `log_tran_step` */
+/*Table structure for table `log_kettle_tran_step` */
 
-DROP TABLE IF EXISTS `log_tran_step`;
-
-CREATE TABLE `log_tran_step` (
+CREATE TABLE `log_kettle_tran_step` (
   `ID_LOG` int(11) DEFAULT NULL,
   `ID_BATCH` int(11) DEFAULT NULL,
   `CHANNEL_ID` varchar(255) DEFAULT NULL,
@@ -385,9 +369,6 @@ CREATE TABLE `log_tran_step` (
   `ERRORS` bigint(20) DEFAULT NULL,
   `LOG_FIELD` mediumtext
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
 
 commit;
 

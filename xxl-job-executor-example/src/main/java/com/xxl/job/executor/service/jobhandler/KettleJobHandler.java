@@ -39,6 +39,13 @@ public class KettleJobHandler extends IJobHandler {
         }
     }
 
+    @Override
+    public CallBack postExecute(CallBack callBack, String... params) throws Exception {
+        //todo 执行后更新，记录对应的log_id
+//        Worker.getLogId();
+        return super.postExecute(callBack, params);
+    }
+
     public CallBack doExecute(String... params) throws KettleException {
         KettleJobParamParser kettleJobParamParser = new KettleJobParamParser(params);
 
