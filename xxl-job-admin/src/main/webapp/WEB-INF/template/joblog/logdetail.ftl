@@ -87,59 +87,102 @@
         #about a {
             color: #777;
         }
+
+        #content table {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 12px;
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #69c;
+        }
+
+        #content th {
+            padding: 12px 17px 12px 17px;
+            font-weight: normal;
+            font-size: 14px;
+            color: #4A85BA;
+            border-bottom: 1px dashed #69c;
+        }
+
+        #content td {
+            padding: 7px 17px 7px 17px;
+            color: #BABABA;
+        }
+
+        #content tbody tr:hover td {
+            color: #B9A69E;
+            background: #214283;
+        }
     </style>
 </head>
 <body>
-<#if logTypes.content?size > 1>
 <ul id="tabs">
+<#if logTypes.content??>
+<#--如果不是请求指定的logType，就默认显示控制台-->
+    <#if logTypes.content?seq_contains(currentLogType)>
+        <li><a href="${request.contextPath}/joblog/logDetailPage?id=${logId}&jobHandler=${jobHandlerName!}"
+               name="#Console">Console</a></li>
+    <#else >
+        <li><a href="${request.contextPath}/joblog/logDetailPage?id=${logId}&jobHandler=${jobHandlerName!}"
+               name="#Console" class="current">Console</a></li>
+    </#if>
+<#--输出所有的logType-->
     <#list logTypes.content as logType>
-        <#if logType?trim?length < 1 >
-            <li><a href="#" name="#${logType}">Console</a></li>
-        <#elseif logType == currentLogType>
-            <#--<#if jobHandlerName??>&jobHandler=${jobHandlerName}</#if><#if logType??>&logType=${logType}</#if>-->
-            <li><a href="joblog/logDetailPage?id=${logId}&jobHandler=${jobHandlerName!}&logType=${logType!}"
+        <#if logType == currentLogType>
+        <#--<#if jobHandlerName??>&jobHandler=${jobHandlerName}</#if><#if logType??>&logType=${logType}</#if>-->
+            <li>
+                <a href="${request.contextPath}/joblog/logDetailPage?id=${logId}&jobHandler=${jobHandlerName!}&logType=${logType!}"
                    name="#${logType}" class="current">${logType}</a></li>
         <#else >
-            <li><a href="joblog/logDetailPage?id=${logId}&jobHandler=${jobHandlerName!}&logType=${logType!}"
+            <li>
+                <a href="${request.contextPath}/joblog/logDetailPage?id=${logId}&jobHandler=${jobHandlerName!}&logType=${logType!}"
                    name="#${logType}">${logType}</a></li>
         </#if>
     </#list>
-</ul>
 </#if>
+</ul>
 
 <div id="content">
     <div>
-    <pre style="font-family: Arial, Helvetica;font-size: small;">
+
     <#if result.code == 200>
         <#list result.content as line>
+            <#--类型为string-->
             <#if line?is_string>
+            <#-- 输出头 -->
+                <#if line_index == 0>
+                <pre style="font-family: Arial, Helvetica;font-size: small;">
+                </#if>
             ${line}
+                <#if !line_has_next>
+                </pre>
+                </#if>
+            <#--类型为map-->
             <#elseif line?is_hash>
             <#-- 输出表头 -->
                 <#if line_index == 0>
                 <table>
                     <thead>
-                            <tr>
-                                <#list line?keys as k>
-                                    <th>${k}</th>
-                                </#list>
-                            </tr>
-                        </thead>
+                    <tr>
+                        <#list line?keys as k>
+                            <th>${k}</th>
+                        </#list>
+                    </tr>
+                    </thead>
                 <tbody>
-                <#--输出tbody-->
                 </#if>
+            <#--输出tbody-->
             <tr>
-                <#list map?keys as k>
-                    <td>${map[k]}</td>
+                <#list line?keys as k>
+                    <td>${line[k]}</td>
                 </#list>
-                </tr>
+            </tr>
             <#-- 输出表结束符-->
                 <#if !line_has_next>
                 </tbody>
                 </table>
                 </#if>
             <#else >
-                <#break >
             </#if>
 
         </#list>
@@ -147,7 +190,7 @@
         <h3 style="color: red;">ERROR</h3>
     ${result.msg}
     </#if>
-    </pre>
+
     </div>
 </div>
 </body>
