@@ -1,8 +1,10 @@
 package com.xxl.job.executor.service.jobhandler;
 
 import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.handler.Worker;
 import com.xxl.job.core.handler.annotation.JobHander;
 import com.xxl.job.core.util.CallBack;
+import com.xxl.job.executor.loader.dao.*;
 import com.xxl.job.executor.service.parser.KettleJobParamParser;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.Result;
@@ -15,7 +17,10 @@ import org.pentaho.di.trans.Trans;
 import org.pentaho.di.trans.TransMeta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +31,17 @@ public class KettleTransHandler extends IJobHandler {
 
     private final static String FILE_SUFFIX_TRANSFORMATION = "ktr";
     private static transient Logger logger = LoggerFactory.getLogger(KettleTransHandler.class);
+
+    @Autowired
+    private LogKettleTranMapper logKettleTranMapper;
+    @Autowired
+    private LogKettleTranRunMapper logKettleTranRunMapper;
+    @Autowired
+    private LogKettleTranStepMapper logKettleTranStepMapper;
+    @Autowired
+    private LogKettleTranChannelMapper logKettleTranChannelMapper;
+    @Autowired
+    private LogKettleTranMetricsMapper logKettleTranMetricsMapper;
 
     @Override
     public CallBack execute(String... params) throws Exception {
@@ -40,9 +56,24 @@ public class KettleTransHandler extends IJobHandler {
 
     @Override
     public CallBack postExecute(CallBack callBack, String... params) throws Exception {
-        //todo 执行后更新，记录对应的log_id
-//        Worker.getLogId();
+        //执行后更新，记录对应的log_id
+        updateTransLogIdByID_Batch(Long.valueOf(Worker.getLogId()), (Long) callBack.getData());
         return super.postExecute(callBack, params);
+    }
+
+    /**
+     * 更新对应trans的LOG_ID
+     *
+     * @param ID_LOG
+     * @param ID_BATCH
+     */
+    @Transactional
+    public void updateTransLogIdByID_Batch(long ID_LOG, long ID_BATCH) {
+        logKettleTranMapper.updateID_LOGByID_BATCH(ID_LOG, ID_BATCH);
+        logKettleTranRunMapper.updateID_LOGByID_BATCH(ID_LOG, ID_BATCH);
+        logKettleTranStepMapper.updateID_LOGByID_BATCH(ID_LOG, ID_BATCH);
+        logKettleTranChannelMapper.updateID_LOGByID_BATCH(ID_LOG, ID_BATCH);
+        logKettleTranMetricsMapper.updateID_LOGByID_BATCH(ID_LOG, ID_BATCH);
     }
 
     public CallBack doExecute(String... params) throws KettleException {

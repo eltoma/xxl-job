@@ -9,4 +9,12 @@ import java.util.List;
 public interface LogKettleJobChannelMapper {
 
     List<LogKettleJobChannel> selectByID_LOG(Long ID_LOG);
+
+    /**
+     * 通过ID_BATCH更新ID_LOG
+     *
+     * @param ID_LOG
+     * @param ID_BATCH
+     */
+    void updateID_LOGByID_BATCH(Long ID_LOG, Long ID_BATCH);
 }
