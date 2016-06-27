@@ -16,8 +16,8 @@ import java.util.List;
 /**
  * Created by feiluo on 6/24/2016.
  */
-@LogReader(forJobHandler = LogReaderRepository.LOG_READER_DEFAULT_NAME)
-public class DefaultFileLogReader {
+@LogReader(forJobHandler = LogReaderRepository.LOG_READER_DFAULT_CONSOLE_NAME)
+public class ConsoleLogReader {
 
     /**
      * support read log-file

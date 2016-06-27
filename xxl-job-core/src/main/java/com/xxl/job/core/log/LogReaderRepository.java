@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
-import com.xxl.job.core.log.reader.DefaultFileLogReader;
 import com.xxl.job.core.log.reader.LogReader;
 import com.xxl.job.core.log.reader.LogType;
 import org.apache.commons.lang3.ArrayUtils;
@@ -19,9 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by feiluo on 6/24/2016.
@@ -30,7 +31,7 @@ import java.util.*;
 public class LogReaderRepository implements ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(LogReaderRepository.class);
 
-    public static final String LOG_READER_DEFAULT_NAME = "default";
+    public static final String LOG_READER_DFAULT_CONSOLE_NAME = "console";
     private static Class<?> LOG_READER_DEFAULT_CLASS;
     private static Method LOG_READER_DEFAULT_METHOD;
 
@@ -106,7 +107,7 @@ public class LogReaderRepository implements ApplicationContextAware {
         for (Map.Entry<String, Object> entry : serviceBeanMap.entrySet()) {
             LogReader logReader = entry.getValue().getClass().getAnnotation(LogReader.class);
             String forJobHandler = logReader.forJobHandler();
-            if (LOG_READER_DEFAULT_NAME.equals(logReader.forJobHandler())) {
+            if (LOG_READER_DFAULT_CONSOLE_NAME.equals(logReader.forJobHandler())) {
                 //默认日志处理
                 LOG_READER_DEFAULT_CLASS = entry.getValue().getClass();
                 LOG_READER_DEFAULT_METHOD = MethodUtils.getMethodsListWithAnnotation(LOG_READER_DEFAULT_CLASS, LogType.class).get(0);
