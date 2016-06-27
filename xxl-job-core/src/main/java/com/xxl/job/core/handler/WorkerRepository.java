@@ -3,6 +3,7 @@ package com.xxl.job.core.handler;
 import com.xxl.job.core.handler.annotation.JobHander;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -87,7 +88,7 @@ public class WorkerRepository implements ApplicationContextAware {
     }
 
     protected String getJobName(String beanName, Object bean) {
-        String jobName = bean.getClass().getAnnotation(JobHander.class).value();
+        String jobName = AopUtils.getTargetClass(bean).getAnnotation(JobHander.class).value();
         if (StringUtils.hasText(jobName)) {
             return jobName;
         }

@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -105,16 +106,16 @@ public class LogReaderRepository implements ApplicationContextAware {
         }
         LogReaderRepositoryBuilderHelper builderHelper = new LogReaderRepositoryBuilderHelper();
         for (Map.Entry<String, Object> entry : serviceBeanMap.entrySet()) {
-            LogReader logReader = entry.getValue().getClass().getAnnotation(LogReader.class);
+            LogReader logReader = AopUtils.getTargetClass(entry.getValue()).getAnnotation(LogReader.class);
             String forJobHandler = logReader.forJobHandler();
             if (LOG_READER_DFAULT_CONSOLE_NAME.equals(logReader.forJobHandler())) {
                 //默认日志处理
-                LOG_READER_DEFAULT_CLASS = entry.getValue().getClass();
+                LOG_READER_DEFAULT_CLASS = AopUtils.getTargetClass(entry.getValue());
                 LOG_READER_DEFAULT_METHOD = MethodUtils.getMethodsListWithAnnotation(LOG_READER_DEFAULT_CLASS, LogType.class).get(0);
                 builderHelper.canLogReaderInvoke(LOG_READER_DEFAULT_CLASS, LOG_READER_DEFAULT_METHOD);
                 continue;
             }
-            Class<?> targetClass = entry.getValue().getClass();
+            Class<?> targetClass = AopUtils.getTargetClass(entry.getValue());
             // 获取有@LogType标识的方法
             List<Method> methodsListHasLogType = MethodUtils.getMethodsListWithAnnotation(targetClass, LogType.class);
             if (CollectionUtils.isEmpty(methodsListHasLogType)) {

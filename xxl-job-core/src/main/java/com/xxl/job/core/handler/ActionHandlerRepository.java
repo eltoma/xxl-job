@@ -10,6 +10,7 @@ import com.xxl.job.core.util.CallBack;
 import com.xxl.job.core.util.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -110,7 +111,8 @@ public class ActionHandlerRepository implements ApplicationContextAware {
             if (!(entry.getValue() instanceof IActionHandler)) {
                 continue;
             }
-            ActionHandler actionHandler = entry.getValue().getClass().getAnnotation(ActionHandler.class);
+            Class<?> targetClass = AopUtils.getTargetClass(entry.getValue());
+            ActionHandler actionHandler = targetClass.getAnnotation(ActionHandler.class);
             if (actionHandler == null) {
                 continue;
             }
@@ -118,7 +120,7 @@ public class ActionHandlerRepository implements ApplicationContextAware {
                 if (logger.isDebugEnabled()) {
                     logger.debug("action handler regist [{}]<-[{}]", new Object[]{actionEnum.name(), entry.getKey()});
                 }
-                builder.put(actionEnum, (Class<? extends IActionHandler>) entry.getValue().getClass());
+                builder.put(actionEnum, (Class<? extends IActionHandler>) targetClass);
             }
         }
         actionHandlerMap = builder.build();
