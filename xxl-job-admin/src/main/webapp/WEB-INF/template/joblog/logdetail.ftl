@@ -68,7 +68,7 @@
             border-top: 4px solid #D25A0B;
             padding: 2em;
             /* height: 220px; */
-            color: white;
+            color: #BABABA;
         }
 
         #content h2,

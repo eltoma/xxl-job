@@ -1,6 +1,7 @@
 package com.xxl.job.executor.loader.dao;
 
 import com.xxl.job.executor.loader.dao.model.LogKettleTranChannel;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public interface LogKettleTranChannelMapper {
      * @param jobID_BATCH
      * @return
      */
-    List<Integer> selectBatchIdByJobID_BATCH(Long jobID_BATCH);
+    List<Integer> selectBatchIdByJobID_BATCH(@Param("jobID_BATCH")Long jobID_BATCH);
 
     /**
      * 通过ID_BATCH更新ID_LOG
@@ -24,6 +25,6 @@ public interface LogKettleTranChannelMapper {
      * @param ID_LOG
      * @param ID_BATCH
      */
-    void updateID_LOGByID_BATCH(Long ID_LOG, Long ID_BATCH);
+    void updateID_LOGByID_BATCH(@Param("ID_LOG")Long ID_LOG, @Param("ID_BATCH")Long ID_BATCH);
 
 }

@@ -1,6 +1,7 @@
 package com.xxl.job.executor.loader.dao;
 
 import com.xxl.job.executor.loader.dao.model.LogKettleTranMetrics;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,5 +16,5 @@ public interface LogKettleTranMetricsMapper {
      * @param ID_LOG
      * @param ID_BATCH
      */
-    void updateID_LOGByID_BATCH(Long ID_LOG, Long ID_BATCH);
+    void updateID_LOGByID_BATCH(@Param("ID_LOG")Long ID_LOG, @Param("ID_BATCH")Long ID_BATCH);
 }

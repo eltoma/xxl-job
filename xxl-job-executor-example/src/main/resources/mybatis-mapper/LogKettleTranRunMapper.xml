@@ -33,7 +33,7 @@
     </select>
 
     <update id="updateID_LOGByID_BATCH">
-        UPDATE `log_kettle_tran_metrics` SET `ID_LOG` = #{ID_LOG,jdbcType=INTEGER}
+        UPDATE `log_kettle_tran_run` SET `ID_LOG` = #{ID_LOG,jdbcType=INTEGER}
         WHERE `ID_BATCH` = #{ID_BATCH,jdbcType=INTEGER}
     </update>
 </mapper>

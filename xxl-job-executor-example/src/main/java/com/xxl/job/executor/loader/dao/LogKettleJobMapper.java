@@ -1,6 +1,7 @@
 package com.xxl.job.executor.loader.dao;
 
 import com.xxl.job.executor.loader.dao.model.LogKettleJob;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public interface LogKettleJobMapper {
      * @param ID_LOG
      * @param ID_JOB
      */
-    void updateID_LOGByID_BATCH(Long ID_LOG, Long ID_JOB);
+    void updateID_LOGByID_BATCH(@Param("ID_LOG") Long ID_LOG, @Param("ID_JOB") Long ID_JOB);
 }
