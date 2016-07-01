@@ -1,4 +1,4 @@
-package com.xxl.job.core.log.reader;
+package com.xxl.job.core.log.annotation;
 
 import org.springframework.stereotype.Component;
 
@@ -8,20 +8,22 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * annotation for log reader
+ * annotation for log type
+ * <p>
+ * mark deal log type
  *
  * @author 2016-5-17 21:06:49
  */
 @Component
-@Target({ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LogReader {
+public @interface LogType {
 
     /**
-     * job handler name
+     * log type
+     * Distinguish between the different logs
      *
      * @return
      */
-    String forJobHandler();
-
+    String[] value() default {};
 }

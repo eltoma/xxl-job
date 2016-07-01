@@ -1,7 +1,8 @@
 package com.xxl.job.executor.service.joblogreader;
 
-import com.xxl.job.core.log.reader.LogReader;
-import com.xxl.job.core.log.reader.LogType;
+import com.xxl.job.core.log.annotation.LogReader;
+import com.xxl.job.core.log.annotation.LogType;
+import com.xxl.job.core.log.annotation.LogView;
 import com.xxl.job.executor.loader.dao.LogKettleJobChannelMapper;
 import com.xxl.job.executor.loader.dao.LogKettleJobItemMapper;
 import com.xxl.job.executor.loader.dao.LogKettleJobMapper;
@@ -27,6 +28,7 @@ public class LogReader4KettleJobHandler {
     private LogKettleJobChannelMapper logKettleJobChannelMapper;
     @Autowired
     private LogKettleJobItemMapper logKettleJobItemMapper;
+
 
     @LogType("job_log")
     public List<LogKettleJob> readJobLog(String triggerLogId, Date triggerDate) throws Exception {

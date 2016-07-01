@@ -1,7 +1,7 @@
 package com.xxl.job.executor.service.joblogreader;
 
-import com.xxl.job.core.log.reader.LogReader;
-import com.xxl.job.core.log.reader.LogType;
+import com.xxl.job.core.log.annotation.LogReader;
+import com.xxl.job.core.log.annotation.LogType;
 import com.xxl.job.executor.loader.dao.*;
 import com.xxl.job.executor.loader.dao.model.*;
 import org.springframework.beans.factory.annotation.Autowired;

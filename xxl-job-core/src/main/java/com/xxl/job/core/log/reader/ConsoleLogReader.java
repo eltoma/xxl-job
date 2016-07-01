@@ -2,6 +2,8 @@ package com.xxl.job.core.log.reader;
 
 import com.xxl.job.core.log.LogReaderRepository;
 import com.xxl.job.core.log.XxlJobFileAppender;
+import com.xxl.job.core.log.annotation.LogReader;
+import com.xxl.job.core.log.annotation.LogType;
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;

@@ -4,8 +4,10 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
-import com.xxl.job.core.log.reader.LogReader;
-import com.xxl.job.core.log.reader.LogType;
+import com.xxl.job.core.log.annotation.LogReader;
+import com.xxl.job.core.log.annotation.LogType;
+import com.xxl.job.core.log.annotation.LogView;
+import com.xxl.job.core.log.reader.FreeMarkerLogTemplate;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -42,6 +44,16 @@ public class LogReaderRepository implements ApplicationContextAware {
     private static Map<String, Class<?>> handlerToClass;
     public ApplicationContext applicationContext;
 
+    /**
+     * 读取日志
+     *
+     * @param jobHandlerName
+     * @param logType
+     * @param triggerLogId
+     * @param triggerDate
+     * @return
+     * @throws Exception
+     */
     public Optional<Object> readLog(String jobHandlerName, String logType, String triggerLogId, Date triggerDate) throws Exception {
         if (handlerTypeToMethod == null || handlerToMethod == null || handlerTypeToClass == null || handlerToClass == null) {
             logger.error("LogReader Repository is not init");
@@ -52,6 +64,7 @@ public class LogReaderRepository implements ApplicationContextAware {
         Object bean = applicationContext.getBean(logReaderClass);
         try {
             Object returnData = method.invoke(bean, triggerLogId, triggerDate);
+            returnData = postReadLog(logReaderClass, method, bean, returnData);
             return Optional.fromNullable(returnData);
         } catch (Exception e) {
             logger.error("call Log reader fail.", e);
@@ -59,6 +72,13 @@ public class LogReaderRepository implements ApplicationContextAware {
         }
     }
 
+
+    /**
+     * 获取日志类型
+     *
+     * @param jobHandlerName
+     * @return
+     */
     public Collection<String> getLogType(String jobHandlerName) {
         return handlerTypeToMethod.row(jobHandlerName).keySet();
     }
@@ -75,6 +95,13 @@ public class LogReaderRepository implements ApplicationContextAware {
         return LOG_READER_DEFAULT_CLASS;
     }
 
+    /**
+     * 获取日志读取器的方法
+     *
+     * @param jobHandlerName
+     * @param logType
+     * @return
+     */
     public Method getLogReaderMethod(String jobHandlerName, String logType) {
         Method logReaderMethod = handlerTypeToMethod.get(jobHandlerName, logType);
         if (logReaderMethod != null) {
@@ -85,6 +112,35 @@ public class LogReaderRepository implements ApplicationContextAware {
             return logReaderMethod;
         }
         return LOG_READER_DEFAULT_METHOD;
+    }
+
+    /**
+     * 读取日志后的处理
+     *
+     * @param logReaderClass
+     * @param method
+     * @param bean
+     * @param returnData
+     * @return
+     */
+    protected Object postReadLog(Class<?> logReaderClass, Method method, Object bean, Object returnData) {
+        if (method.isAnnotationPresent(LogView.class) || logReaderClass.isAnnotationPresent(LogView.class)) {
+            LogView logView = method.getAnnotation(LogView.class);
+            if (logView == null) {
+                logView = logReaderClass.getAnnotation(LogView.class);
+            }
+            ILogTemplate logTemplate = getLogTemplate(logView.type());
+            if (logTemplate == null) {
+                logger.error("template[{}] deal not found", logView.type());
+            } else {
+                return logTemplate.getView(logView, returnData);
+            }
+        }
+        return returnData;
+    }
+
+    protected ILogTemplate getLogTemplate(String type) {
+        return applicationContext.getBean(FreeMarkerLogTemplate.class);
     }
 
     @Override
