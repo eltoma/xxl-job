@@ -2,6 +2,7 @@ package com.xxl.job.executor.service.joblogreader;
 
 import com.xxl.job.core.log.annotation.LogReader;
 import com.xxl.job.core.log.annotation.LogType;
+import com.xxl.job.core.log.annotation.LogView;
 import com.xxl.job.executor.loader.dao.*;
 import com.xxl.job.executor.loader.dao.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.List;
  * <p>
  * Created by feiluo on 6/24/2016.
  */
+@LogView
 @LogReader(forJobHandler = "KettleTransHandler")
 public class LogReader4KettleTransHandler {
 

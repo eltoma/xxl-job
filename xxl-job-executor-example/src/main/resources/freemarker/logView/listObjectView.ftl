@@ -5,8 +5,8 @@
     <table>
         <thead>
         <tr>
-            <#list line?keys as k>
-                <th>${k}</th>
+            <#list head as k_head>
+                <th>${k_head}</th>
             </#list>
         </tr>
         </thead>
@@ -14,8 +14,9 @@
     </#if>
 <#--输出tbody-->
 <tr>
-    <#list line?keys as k>
-        <td>${line[k]}</td>
+<#--<#list line.keySet() as k_body>-->
+    <#list head as k_body>
+        <td>${line.get(k_body)!}</td>
     </#list>
 </tr>
 <#-- 输出表结束符-->

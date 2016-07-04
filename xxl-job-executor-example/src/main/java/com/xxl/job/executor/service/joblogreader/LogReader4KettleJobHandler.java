@@ -19,6 +19,7 @@ import java.util.List;
  * <p>
  * Created by feiluo on 6/24/2016.
  */
+@LogView
 @LogReader(forJobHandler = "KettleJobHandler")
 public class LogReader4KettleJobHandler {
 

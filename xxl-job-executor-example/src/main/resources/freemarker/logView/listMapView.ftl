@@ -15,7 +15,7 @@
 <#--输出tbody-->
 <tr>
     <#list line?keys as k>
-        <td>${line[k]}</td>
+        <td>${line[k]!}</td>
     </#list>
 </tr>
 <#-- 输出表结束符-->

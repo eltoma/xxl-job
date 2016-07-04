@@ -1,25 +1,25 @@
 package com.xxl.job.core.log.reader;
 
 import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableMap;
 import com.xxl.job.core.log.ILogTemplate;
 import com.xxl.job.core.log.annotation.LogView;
+import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
-import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.cglib.beans.BeanMap;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ResourceUtils;
 
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 import static org.springframework.util.ResourceUtils.CLASSPATH_URL_PREFIX;
 
@@ -37,7 +37,6 @@ public class FreeMarkerLogTemplate implements ILogTemplate {
         try {
             Configuration configuration = new Configuration(Configuration.VERSION_2_3_23);
             configuration.setDirectoryForTemplateLoading(ResourceUtils.getFile(FREE_MARKER_REPO));
-            configuration.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
             configuration.setEncoding(Locale.getDefault(), "utf-8");
 
             Map<String, Object> viewData = new HashMap<>();
@@ -47,7 +46,7 @@ public class FreeMarkerLogTemplate implements ILogTemplate {
             String viewName = getViewName(logView, returnData, viewData);
             Template template = configuration.getTemplate(viewName, "utf-8");
             StringWriter stringWriter = new StringWriter();
-            template.process(viewData, stringWriter, ObjectWrapper.BEANS_WRAPPER);
+            template.process(viewData, stringWriter, BeansWrapper.getDefaultInstance());
             return stringWriter.toString();
         } catch (IOException | TemplateException e) {
             throw Throwables.propagate(e);
@@ -86,23 +85,106 @@ public class FreeMarkerLogTemplate implements ILogTemplate {
             return "primitiveView.ftl";
         }
         if (returnData instanceof List) {
-            List<?> list = (List<?>) returnData;
-            if (CollectionUtils.isEmpty(list)) {
+            List<?> returnDatalist = (List<?>) returnData;
+            if (CollectionUtils.isEmpty(returnDatalist)) {
                 return "listPrimitiveView.ftl";
             }
-            Object obj = list.get(0);
-            if (obj == null || obj.getClass().isPrimitive()) {
+            Object returnDataEm = returnDatalist.get(0);
+            if (returnDataEm == null || returnDataEm.getClass().isPrimitive()) {
                 return "listPrimitiveView.ftl";
-            } else if (obj instanceof Map) {
+            } else if (returnDataEm instanceof Map) {
                 return "listMapView.ftl";
             } else {
+                viewData.put("head", getHead(returnDatalist));
+                viewData.put("callBack", getBeanMap(returnDatalist));
                 return "listObjectView.ftl";
             }
         }
         if (returnData instanceof Map) {
             return "mapView.ftl";
         }
+        viewData.put("head", getHead(returnData));
+        viewData.put("callBack", getBeanMap(returnData));
         return "ObjectView.ftl";
+    }
+
+    /**
+     * 获得head
+     *
+     * @param returnDatalist
+     * @return
+     */
+    public List<String> getHead(List<?> returnDatalist) {
+        if (CollectionUtils.isEmpty(returnDatalist)) {
+            return Collections.EMPTY_LIST;
+        }
+        Object returnDataEm = returnDatalist.get(0);
+        PropertyDescriptor[] propertyDescriptors = PropertyUtils.getPropertyDescriptors(returnDataEm.getClass());
+        List<String> list = new ArrayList<>(propertyDescriptors.length);
+        for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+            if ("class".equals(propertyDescriptor.getName())) {
+                continue;
+            }
+            list.add(propertyDescriptor.getName());
+        }
+        return list;
+    }
+
+    /**
+     * 获得head
+     *
+     * @param obj
+     * @return
+     */
+    public List<String> getHead(Object obj) {
+        PropertyDescriptor[] propertyDescriptors = PropertyUtils.getPropertyDescriptors(obj.getClass());
+        List<String> list = new ArrayList<>(propertyDescriptors.length);
+        for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+            list.add(propertyDescriptor.getName());
+        }
+        return list;
+    }
+
+    /**
+     * bean 转化为Map
+     *
+     * @param objectList
+     * @return
+     */
+    public List<Map<String, String>> getBeanMap(List<?> objectList) {
+        List<Map<String, String>> list = new ArrayList<>(objectList.size());
+        try {
+            for (Object obj : objectList) {
+                list.add(BeanUtils.describe(obj));
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * bean转化为map
+     *
+     * @param obj
+     * @return
+     */
+    public Map<String, String> getBeanMap(Object obj) {
+        try {
+//        return BeanMap.create(obj);
+            return BeanUtils.describe(obj);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return Collections.EMPTY_MAP;
     }
 
 }
