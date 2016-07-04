@@ -58,9 +58,14 @@
             </dependencies>
             <repositories>
                 <repository>
-                    <id>pentaho</id>
-                    <name>Pentaho Repository</name>
+                    <id>pentaho-public-release-repos</id>
+                    <name>pentaho-public-release-repos</name>
                     <url>http://repository.pentaho.org/content/repositories/pentaho-public-release-repos/</url>
+                </repository>
+                <repository>
+                    <id>proxied-3rd-party-releases</id>
+                    <name>proxied-3rd-party-releases</name>
+                    <url>http://repository.pentaho.org/content/repositories/proxied-3rd-party-releases/</url>
                 </repository>
                 <repository>
                     <id>mvnrepository</id>
