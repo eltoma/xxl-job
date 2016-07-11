@@ -9,6 +9,7 @@ import com.xxl.job.executor.service.parser.KettleJobParamParser;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.Result;
 import org.pentaho.di.core.exception.KettleException;
+import org.pentaho.di.core.logging.KettleLogStore;
 import org.pentaho.di.core.util.EnvUtil;
 import org.pentaho.di.core.variables.VariableSpace;
 import org.pentaho.di.job.Job;
@@ -114,6 +115,10 @@ public class KettleTransHandler extends IJobHandler {
         // 等待转换执行结束
         trans.waitUntilFinished();
         Result result = trans.getResult();
+        // 获取kettle日志
+        logger.info(KettleLogStore.getAppender().getBuffer().toString());
+        // 清理日志
+        KettleLogStore.getAppender().clear();
         if (trans.getErrors() > 0) {
             logger.error("[kettle Transformation]run error. {}", new Object[]{result == null ? "" : result.getLogText()});
             return CallBack.failWithData(trans.getBatchId());
