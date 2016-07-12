@@ -121,7 +121,7 @@
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobName" placeholder="请输入“任务名”" minlength="4" maxlength="100" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
+						<label for="lastname" class="col-sm-2 control-label">Cron<#--<font color="red">*</font>--></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="100" ></div>
 						<label for="lastname" class="col-sm-2 control-label">描述<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="200" ></div>
@@ -145,7 +145,7 @@
 						<div class="col-sm-4"><input type="text" class="form-control" name="alarmThreshold" placeholder="请输入“报警阈值”" maxlength="200" ></div>
 					</div>
                     <div class="form-group">
-                        <label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
+                        <label for="firstname" class="col-sm-2 control-label">执行参数<#--<font color="black">*</font>--></label>
                         <div class="col-sm-10"><textarea class="form-control" rows="8" name="executorParam" placeholder="请输入“执行参数”"></textarea></div>
                     </div>
 					<div class="form-group">
@@ -205,9 +205,9 @@ public class DemoJobHandler extends IJobHandler {
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobName" placeholder="请输入“任务名”" minlength="4" maxlength="100" readonly ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
+						<label for="lastname" class="col-sm-2 control-label">Cron<#--<font color="red">*</font>--></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="100" ></div>
-						<label for="lastname" class="col-sm-2 control-label">描述<font color="red">*</font></label>
+						<label for="lastname" class="col-sm-2 control-label">描述<#--<font color="red">*</font>--></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="200" ></div>
 					</div>
 					
@@ -230,7 +230,7 @@ public class DemoJobHandler extends IJobHandler {
 						<div class="col-sm-4"><input type="text" class="form-control" name="alarmThreshold" placeholder="请输入“报警阈值”" maxlength="200" ></div>
 					</div>
                     <div class="form-group">
-                        <label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
+                        <label for="firstname" class="col-sm-2 control-label">执行参数<#--<font color="black">*</font>--></label>
                         <div class="col-sm-10"><textarea class="form-control" rows="8" name="executorParam" placeholder="请输入“执行参数”"></textarea></div>
                     </div>
 					<div class="form-group">

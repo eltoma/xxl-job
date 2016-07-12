@@ -149,6 +149,10 @@ $(function () {
         jobTable.fnDraw();
     });
 
+    $('#jobGroup').change(function () {
+        jobTable.fnDraw();
+    });
+
     // job operate
     $("#job_list").on('click', '.job_operate', function () {
         var typeName;
@@ -219,7 +223,7 @@ $(function () {
                 myValid01: true
             },
             jobCron: {
-                required: true,
+                // required: false,
                 maxlength: 100
             },
             jobDesc: {
@@ -254,7 +258,7 @@ $(function () {
                 maxlength: "“任务名”长度不应超过100位"
             },
             jobCron: {
-                required: "请输入“Cron”.",
+                // required: "请输入“Cron”.",
                 maxlength: "“Cron”长度不应超过100位"
             },
             jobDesc: {
@@ -377,7 +381,7 @@ $(function () {
         focusInvalid: true,
         rules: {
             jobCron: {
-                required: true,
+                // required: true,
                 maxlength: 100
             },
             jobDesc: {
@@ -407,7 +411,7 @@ $(function () {
         },
         messages: {
             jobCron: {
-                required: "请输入“Cron”.",
+                // required: "请输入“Cron”.",
                 maxlength: "“Cron”长度不应超过100位"
             },
             jobDesc: {
