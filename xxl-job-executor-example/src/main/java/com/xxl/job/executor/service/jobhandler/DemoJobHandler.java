@@ -2,6 +2,7 @@ package com.xxl.job.executor.service.jobhandler;
 
 import java.util.concurrent.TimeUnit;
 
+import com.xxl.job.core.handler.annotation.JobHanderRepository;
 import com.xxl.job.core.util.CallBack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

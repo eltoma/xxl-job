@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Created by feiluo on 6/15/2016.
  */
-@JobHanderRepository(min = 2,max = 15)
+@JobHanderRepository(min = 5, max = 15)
 @JobHander("KettleTransHandler")
 public class KettleTransHandler extends IJobHandler {
 
