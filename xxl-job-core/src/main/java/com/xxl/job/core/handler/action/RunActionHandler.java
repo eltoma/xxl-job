@@ -3,6 +3,7 @@ package com.xxl.job.core.handler.action;
 import com.xxl.job.core.constant.ActionEnum;
 import com.xxl.job.core.constant.HandlerParamEnum;
 import com.xxl.job.core.handler.Worker;
+import com.xxl.job.core.handler.WorkerBack;
 import com.xxl.job.core.handler.WorkerRepository;
 import com.xxl.job.core.handler.annotation.ActionHandler;
 import com.xxl.job.core.handler.impl.GlueJobHandler;
@@ -22,13 +23,13 @@ public class RunActionHandler implements IActionHandler {
     private WorkerRepository workerRepository;
 
     @Override
-    public CallBack action(Map<String, String> params) {
+    public CallBack action(Map<String, String> jobInfo) {
         // push data to queue
-        String handler_glue_switch = params.get(HandlerParamEnum.GLUE_SWITCH.name());
+        String handler_glue_switch = jobInfo.get(HandlerParamEnum.GLUE_SWITCH.name());
         Worker worker;
         if ("0".equals(handler_glue_switch)) {
             // bean model
-            String jobHanderName = params.get(HandlerParamEnum.EXECUTOR_HANDLER.name());
+            String jobHanderName = jobInfo.get(HandlerParamEnum.EXECUTOR_HANDLER.name());
             if (jobHanderName == null || jobHanderName.trim().length() == 0) {
                 return CallBack.fail("bean model handler[HANDLER_NAME] not found.");
             }
@@ -38,8 +39,8 @@ public class RunActionHandler implements IActionHandler {
             }
         } else {
             // glue
-            String job_group = params.get(HandlerParamEnum.JOB_GROUP.name());
-            String job_name = params.get(HandlerParamEnum.JOB_NAME.name());
+            String job_group = jobInfo.get(HandlerParamEnum.JOB_GROUP.name());
+            String job_name = jobInfo.get(HandlerParamEnum.JOB_NAME.name());
             if (job_group == null || job_group.trim().length() == 0 || job_name == null || job_name.trim().length() == 0) {
                 return CallBack.fail("glue model handler[job group or name] is null.");
             }
@@ -50,7 +51,7 @@ public class RunActionHandler implements IActionHandler {
             }
         }
 
-        worker.pushJob(params);
+        worker.submit(jobInfo);
         return CallBack.success();
     }
 }

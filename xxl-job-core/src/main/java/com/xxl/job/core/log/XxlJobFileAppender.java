@@ -1,6 +1,6 @@
 package com.xxl.job.core.log;
 
-import com.xxl.job.core.handler.Worker;
+import com.xxl.job.core.handler.WorkerCallable;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Layout;
@@ -18,7 +18,7 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 
 
     // trogger log file path
-    public static  String filePath;
+    public static String filePath;
 
     public void setFilePath(String filePath) {
         XxlJobFileAppender.filePath = filePath;
@@ -26,7 +26,7 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 
     @Override
     protected void append(LoggingEvent event) {
-        String trigger_log_id = Worker.getLogId();
+        String trigger_log_id = WorkerCallable.getLogId();
         if (trigger_log_id == null || trigger_log_id.trim().length() == 0) {
             return;
         }

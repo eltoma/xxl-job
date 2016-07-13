@@ -185,6 +185,7 @@ public class JobLogController {
         reqMap.put(HandlerParamEnum.EXECUTOR_HANDLER.name(), log.getExecutorHandler());
         reqMap.put(HandlerParamEnum.JOB_GROUP.name(), log.getJobGroup());
         reqMap.put(HandlerParamEnum.JOB_NAME.name(), log.getJobName());
+        reqMap.put(HandlerParamEnum.LOG_ID.name(), String.valueOf(id));
 
         CallBack callBack = HttpUtil.post(HttpUtil.addressToUrl(log.getExecutorAddress()), reqMap);
         if (callBack.isSuccess()) {

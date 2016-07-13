@@ -1,19 +1,19 @@
 package com.xxl.job.core.handler;
 
 import com.xxl.job.core.handler.annotation.JobHander;
+import com.xxl.job.core.handler.annotation.JobHanderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 
 /**
  * Created by feiluo on 6/22/2016.
@@ -31,9 +31,16 @@ public class WorkerRepository implements ApplicationContextAware {
      * @param handler
      */
     public Worker regist(String jobName, IJobHandler handler) {
-        Worker worker = new Worker(getJobProxy(handler));
-        worker.start();
-        workerMap.put(jobName, worker);    // putIfAbsent
+        Class<?> jobClass = AopUtils.getTargetClass(handler);
+        JobHanderRepository jobHanderRepository = jobClass.getAnnotation(JobHanderRepository.class);
+        ExecutorService executorService;
+        if (jobHanderRepository == null) {
+            executorService = Executors.newSingleThreadExecutor();
+        } else {
+            executorService = new ThreadPoolExecutor(jobHanderRepository.min(), jobHanderRepository.max(), 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+        }
+        Worker worker = new Worker(jobName, getJobProxy(handler), jobClass, executorService);
+        workerMap.put(jobName, worker);
         logger.info(">>>>>>>>>>> xxl-job regist handler success, jobName:{}, handler:{}", new Object[]{jobName, handler});
         return worker;
     }

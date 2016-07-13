@@ -32,7 +32,7 @@ public class LogCallBack {
                             try {
                                 callback = HttpUtil.post(item.get("_address"), item);
                             } catch (Exception e) {
-                                logger.info("Worker Exception:", e);
+                                logger.info("WorkerBack Exception:", e);
                             }
                             logger.info(">>>>>>>>>>> xxl-job callback , params:{}, result:{}", new Object[]{item, callback});
                         }

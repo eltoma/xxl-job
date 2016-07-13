@@ -51,17 +51,13 @@ public class KettleJobParamParser implements IJobParamParser {
         if (array == null || array.length - offset < 1) {
             return Collections.emptyMap();
         }
+
         Map<String, String> map = new HashMap<String, String>();
-        String key = null;
-        String value;
-        for (int i = offset; i <= array.length; i++) {
-            if (key == null) {
-                key = array[i];
-                continue;
+        for (int i = offset; i < array.length; i = i + 2) {
+            map.put(array[i], array[i + 1]);
+            if (array.length < i + 2) {
+                break;
             }
-            value = i == array.length ? null : array[i];
-            map.put(key, value);
-            key = null;
         }
         return map;
     }

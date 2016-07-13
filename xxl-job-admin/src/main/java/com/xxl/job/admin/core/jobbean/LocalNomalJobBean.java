@@ -72,7 +72,7 @@ package com.xxl.job.admin.core.jobbean;
 //			jobLog.setHandleStatus(CallBack.STATUS_SUCCESS);
 //			jobLog.setHandleMsg(JacksonUtil.writeValueAsString(responseMsg));
 //		} catch (Exception e) {
-//			logger.info("Worker Exception:", e);
+//			logger.info("WorkerBack Exception:", e);
 //			StringWriter out = new StringWriter();
 //			e.printStackTrace(new PrintWriter(out));
 //			

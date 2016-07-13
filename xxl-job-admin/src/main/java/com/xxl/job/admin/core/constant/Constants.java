@@ -9,6 +9,11 @@ public class Constants {
 
     public enum JobGroupEnum {
         DEFAULT("默认"),
+        MD_LY_FTP_AUTO("MD-LY FTP 自动"),
+        MD_FILE_FTP_MANUAL("MD-File FTP 手动"),
+        MD_CS_EXCEL_MANUAL("MD-CS Excel 自动"),
+        MD_REPORT_EXCEL_AUTO("MD-Report Excel 手动"),
+        MD_TEMP_MANUAL("MD-Temp 手动"),
         KETTLE_JOB("Kettle Job"),
         KETTLE_TRAN("kettle transformation");
         private String desc;

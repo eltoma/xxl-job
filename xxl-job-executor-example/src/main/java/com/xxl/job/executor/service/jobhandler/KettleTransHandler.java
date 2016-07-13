@@ -1,8 +1,9 @@
 package com.xxl.job.executor.service.jobhandler;
 
 import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.Worker;
+import com.xxl.job.core.handler.WorkerCallable;
 import com.xxl.job.core.handler.annotation.JobHander;
+import com.xxl.job.core.handler.annotation.JobHanderRepository;
 import com.xxl.job.core.util.CallBack;
 import com.xxl.job.executor.loader.dao.*;
 import com.xxl.job.executor.service.parser.KettleJobParamParser;
@@ -12,8 +13,6 @@ import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.logging.KettleLogStore;
 import org.pentaho.di.core.util.EnvUtil;
 import org.pentaho.di.core.variables.VariableSpace;
-import org.pentaho.di.job.Job;
-import org.pentaho.di.job.JobMeta;
 import org.pentaho.di.trans.Trans;
 import org.pentaho.di.trans.TransMeta;
 import org.slf4j.Logger;
@@ -21,12 +20,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by feiluo on 6/15/2016.
  */
+@JobHanderRepository(min = 2,max = 15)
 @JobHander("KettleTransHandler")
 public class KettleTransHandler extends IJobHandler {
 
@@ -58,7 +57,7 @@ public class KettleTransHandler extends IJobHandler {
     @Override
     public CallBack postExecute(CallBack callBack, String... params) throws Exception {
         //执行后更新，记录对应的log_id
-        updateTransLogIdByID_Batch(Long.valueOf(Worker.getLogId()), (Long) callBack.getData());
+        updateTransLogIdByID_Batch(Long.valueOf(WorkerCallable.getLogId()), (Long) callBack.getData());
         return super.postExecute(callBack, params);
     }
 

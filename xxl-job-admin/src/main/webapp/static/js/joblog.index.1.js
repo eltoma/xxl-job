@@ -152,6 +152,10 @@ $(function() {
 	$('#searchBtn').on('click', function(){
 		logTable.fnDraw();
 	});
+	// 任务组选框
+	$('#jobGroup').change(function(){
+		logTable.fnDraw();
+	});
 	
 	// 查看执行器详细执行日志
 	$('#joblog_list').on('click', '.logDetail', function(){

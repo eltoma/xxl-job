@@ -4,6 +4,7 @@ import com.xxl.job.core.constant.ActionEnum;
 import com.xxl.job.core.constant.HandlerParamEnum;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.Worker;
+import com.xxl.job.core.handler.WorkerBack;
 import com.xxl.job.core.handler.WorkerRepository;
 import com.xxl.job.core.handler.annotation.ActionHandler;
 import com.xxl.job.core.util.CallBack;
@@ -23,8 +24,9 @@ public class KillActionHandler implements IActionHandler {
 
     @Override
     public CallBack action(Map<String, String> params) {
-        // kill worker, and create new one
+        // kill workerBack, and create new one
         String handler_glue_switch = params.get(HandlerParamEnum.GLUE_SWITCH.name());
+        String logId = params.get(HandlerParamEnum.LOG_ID.name());
         String handlerName = null;
         if ("0".equals(handler_glue_switch)) {
             String executor_handler = params.get(HandlerParamEnum.EXECUTOR_HANDLER.name());
@@ -46,10 +48,7 @@ public class KillActionHandler implements IActionHandler {
         if (worker == null) {
             return CallBack.fail("job handler[" + handlerName + "] not found.");
         }
-        IJobHandler handler = worker.getHandler();
-        worker.toStop();
-        worker.interrupt();
-        workerRepository.regist(handlerName, handler);
+        worker.killJob(logId);
         return CallBack.success();
     }
 }

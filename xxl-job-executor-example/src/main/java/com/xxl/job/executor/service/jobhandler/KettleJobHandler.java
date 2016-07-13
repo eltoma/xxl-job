@@ -1,8 +1,9 @@
 package com.xxl.job.executor.service.jobhandler;
 
 import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.Worker;
+import com.xxl.job.core.handler.WorkerCallable;
 import com.xxl.job.core.handler.annotation.JobHander;
+import com.xxl.job.core.handler.annotation.JobHanderRepository;
 import com.xxl.job.core.util.CallBack;
 import com.xxl.job.executor.loader.dao.*;
 import com.xxl.job.executor.service.parser.KettleJobParamParser;
@@ -10,12 +11,9 @@ import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.Result;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.logging.KettleLogStore;
-import org.pentaho.di.core.util.EnvUtil;
 import org.pentaho.di.core.variables.VariableSpace;
 import org.pentaho.di.job.Job;
 import org.pentaho.di.job.JobMeta;
-import org.pentaho.di.trans.Trans;
-import org.pentaho.di.trans.TransMeta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,7 @@ import java.util.Map;
 /**
  * Created by feiluo on 6/15/2016.
  */
+@JobHanderRepository(min = 2,max = 15)
 @JobHander("KettleJobHandler")
 public class KettleJobHandler extends IJobHandler {
 
@@ -66,7 +65,7 @@ public class KettleJobHandler extends IJobHandler {
     @Override
     public CallBack postExecute(CallBack callBack, String... params) throws Exception {
         //执行后更新，记录对应的log_id
-        updateLogIdByID_BATCH(Long.valueOf(Worker.getLogId()), (Long) callBack.getData());
+        updateLogIdByID_BATCH(Long.valueOf(WorkerCallable.getLogId()), (Long) callBack.getData());
         return super.postExecute(callBack, params);
     }
 
@@ -137,9 +136,9 @@ public class KettleJobHandler extends IJobHandler {
         job.waitUntilFinished();
         Result result = job.getResult();
         // 获取kettle日志
-//        logger.info(KettleLogStore.getAppender().getBuffer().toString());
+        logger.info(KettleLogStore.getAppender().getBuffer().toString());
         // 清理日志
-//        KettleLogStore.getAppender().clear();
+        KettleLogStore.getAppender().clear();
         if (job.getErrors() > 0) {
             logger.error("[kettle Transformation]run error. {}", new Object[]{result == null ? "" : result.getLogText()});
             return CallBack.failWithData(job.getBatchId());
