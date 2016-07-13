@@ -2,9 +2,7 @@ package com.xxl.job.core.handler.action;
 
 import com.xxl.job.core.constant.ActionEnum;
 import com.xxl.job.core.constant.HandlerParamEnum;
-import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.Worker;
-import com.xxl.job.core.handler.WorkerBack;
 import com.xxl.job.core.handler.WorkerRepository;
 import com.xxl.job.core.handler.annotation.ActionHandler;
 import com.xxl.job.core.util.CallBack;
