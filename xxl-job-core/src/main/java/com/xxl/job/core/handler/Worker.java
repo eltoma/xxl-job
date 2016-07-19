@@ -2,32 +2,46 @@ package com.xxl.job.core.handler;
 
 import com.xxl.job.core.constant.HandlerParamEnum;
 import com.xxl.job.core.constant.JobHandleStatus;
+import com.xxl.job.core.handler.annotation.JobHanderRepository;
 import com.xxl.job.core.log.LogCallBack;
 import com.xxl.job.core.util.CallBack;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 /**
  * Created by feiluo on 7/13/2016.
  */
 public class Worker {
 
-    private String jobName;
+    private String jobHandlerName;
     private IJobHandler jobHandler;
     private Class<?> jobClass;
-    private ExecutorService executorService;
+    private ThreadPoolExecutor executorService;
     private Map<String, WorkderRunInfo> callBackFutureMap = new ConcurrentHashMap<>();
 
-    public Worker(String jobName, IJobHandler jobHandler, Class<?> jobClass, ExecutorService executorService) {
-        this.jobName = jobName;
+    public Worker(String jobHandlerName, IJobHandler jobHandler, Class<?> jobClass) {
+        this.jobHandlerName = jobHandlerName;
         this.jobHandler = jobHandler;
         this.jobClass = jobClass;
-        this.executorService = executorService;
+        init();
+    }
+
+    /**
+     * 初始化线程池
+     */
+    public void init() {
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.shutdown();
+        }
+        JobHanderRepository jobHanderRepository = jobClass.getAnnotation(JobHanderRepository.class);
+        if (jobHanderRepository == null) {
+            this.executorService = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+        } else {
+            this.executorService = new ThreadPoolExecutor(jobHanderRepository.min(), jobHanderRepository.max(), 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+        }
     }
 
     /**
@@ -38,8 +52,7 @@ public class Worker {
     public void submit(Map<String, String> jobInfo) {
         Future<CallBack> callBackFuture = executorService.submit(new WorkerCallable(jobHandler, jobInfo));
         String logId = jobInfo.get(HandlerParamEnum.LOG_ID.name());
-        callBackFutureMap.put(logId, new WorkderRunInfo(jobInfo, callBackFuture));
-        // 移除所有完成的
+        callBackFutureMap.put(logId, new WorkderRunInfo(jobHandlerName, jobInfo, callBackFuture));
         removeDone();
     }
 
@@ -65,6 +78,9 @@ public class Worker {
         callBackFutureMap.remove(logId);
     }
 
+    /**
+     * 移除所有完成的
+     */
     public void removeDone() {
         Set<String> keys = callBackFutureMap.keySet();
         for (String key : keys) {
@@ -75,5 +91,23 @@ public class Worker {
         }
     }
 
+    public String getJobHandlerName() {
+        return jobHandlerName;
+    }
 
+    public IJobHandler getJobHandler() {
+        return jobHandler;
+    }
+
+    public Class<?> getJobClass() {
+        return jobClass;
+    }
+
+    public ThreadPoolExecutor getExecutorService() {
+        return executorService;
+    }
+
+    public Map<String, WorkderRunInfo> getCallBackFutureMap() {
+        return callBackFutureMap;
+    }
 }

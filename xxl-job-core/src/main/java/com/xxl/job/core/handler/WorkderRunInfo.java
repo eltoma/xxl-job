@@ -4,6 +4,7 @@ import com.xxl.job.core.constant.HandlerParamEnum;
 import com.xxl.job.core.util.CallBack;
 import com.xxl.job.core.util.HttpUtil;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -15,16 +16,24 @@ import java.util.concurrent.TimeoutException;
  */
 public class WorkderRunInfo implements Future<CallBack> {
 
+
+    private Date callTime;
     private String logId;
     private String callBackUrl;
+    private String jobHandlerName;
     private Map<String, String> jobInfo;
     private Future<CallBack> callBackFuture;
 
-    public WorkderRunInfo(Map<String, String> jobInfo, Future<CallBack> callBackFuture) {
+    public WorkderRunInfo(String jobHandlerName, Map<String, String> jobInfo, Future<CallBack> callBackFuture) {
         this.jobInfo = jobInfo;
         this.callBackFuture = callBackFuture;
         this.logId = jobInfo.get(HandlerParamEnum.LOG_ID.name());
         this.callBackUrl = HttpUtil.addressToUrl(jobInfo.get(HandlerParamEnum.LOG_ADDRESS.name()));
+        this.callTime = new Date();
+    }
+
+    public Date getCallTime() {
+        return callTime;
     }
 
     public String getLogId() {

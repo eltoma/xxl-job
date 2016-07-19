@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.*;
 
 /**
@@ -27,21 +28,13 @@ public class WorkerRepository implements ApplicationContextAware {
     /**
      * regist handler
      *
-     * @param jobName
+     * @param jobHandlerName
      * @param handler
      */
-    public Worker regist(String jobName, IJobHandler handler) {
-        Class<?> jobClass = AopUtils.getTargetClass(handler);
-        JobHanderRepository jobHanderRepository = jobClass.getAnnotation(JobHanderRepository.class);
-        ExecutorService executorService;
-        if (jobHanderRepository == null) {
-            executorService = Executors.newSingleThreadExecutor();
-        } else {
-            executorService = new ThreadPoolExecutor(jobHanderRepository.min(), jobHanderRepository.max(), 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
-        }
-        Worker worker = new Worker(jobName, getJobProxy(handler), jobClass, executorService);
-        workerMap.put(jobName, worker);
-        logger.info(">>>>>>>>>>> xxl-job regist handler success, jobName:{}, handler:{}", new Object[]{jobName, handler});
+    public Worker regist(String jobHandlerName, IJobHandler handler) {
+        Worker worker = new Worker(jobHandlerName, getJobProxy(handler), AopUtils.getTargetClass(handler));
+        workerMap.put(jobHandlerName, worker);
+        logger.info(">>>>>>>>>>> xxl-job regist handler success, jobName:{}, handler:{}", new Object[]{jobHandlerName, handler});
         return worker;
     }
 
@@ -52,11 +45,20 @@ public class WorkerRepository implements ApplicationContextAware {
     /**
      * get worker
      *
-     * @param jobName
+     * @param jobHanderName
      * @return
      */
-    public Worker getWorker(String jobName) {
-        return workerMap.get(jobName);
+    public Worker getWorker(String jobHanderName) {
+        return workerMap.get(jobHanderName);
+    }
+
+    /**
+     * 获取所有handlerName
+     *
+     * @return
+     */
+    public Set<String> getHandlerNames() {
+        return workerMap.keySet();
     }
 
     // ---------------------------------- init job handler ------------------------------------
@@ -80,13 +82,13 @@ public class WorkerRepository implements ApplicationContextAware {
             return;
         }
         for (Map.Entry<String, Object> entry : serviceBeanMap.entrySet()) {
-            String jobName = getJobName(entry.getKey(), entry.getValue());
+            String jobHandlerName = getJobName(entry.getKey(), entry.getValue());
             if (entry.getValue() instanceof IJobHandler) {
                 IJobHandler handler = (IJobHandler) entry.getValue();
                 if (logger.isDebugEnabled()) {
-                    logger.debug("job handler regist [{}]<-[{}]", new Object[]{jobName, entry.getValue().getClass().getSimpleName()});
+                    logger.debug("job handler regist [{}]<-[{}]", new Object[]{jobHandlerName, entry.getValue().getClass().getSimpleName()});
                 }
-                regist(jobName, handler);
+                regist(jobHandlerName, handler);
             }
         }
         if (logger.isDebugEnabled()) {
