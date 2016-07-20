@@ -36,6 +36,7 @@
  					<div class="input-group">
 	                	<span class="input-group-addon">任务组</span>
                 		<select class="form-control" id="jobGroup" >
+                            <option value="" >所有任务</option>
                 			<#list JobGroupList as group>
                 				<option value="${group}" <#if jobGroup == group>selected</#if> >${group.desc}</option>
                 			</#list>
