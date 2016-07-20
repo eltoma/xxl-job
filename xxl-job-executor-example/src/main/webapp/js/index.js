@@ -30,12 +30,18 @@ function showTaskInfo() {
             $('<p></p>').append("<strong>没有任务记录</strong>").appendTo($target);
             return;
         }
+        var $table = $('<table></table>').addClass('table').addClass('table-hover').append('<thead><tr><th>任务名称</th><th>任务标识</th><th>状态</th><th>提交时间</th><th>运行参数</th></tr></thead>');
+        var $tbody = $('<tbody></tbody>');
         $.each(data, function (i, e) {
-            var taskInfo = '任务名称:' + e.jobNameHander +'_' + e.jobId + '('+e.jobInfo['JOB_NAME']+')'
-                + '：状态' + (e.isDone ? '已完成' : (e.isCancel ? '取消' : '运行'))
-                + '：提交时间：' + date2str(new Date(e.callTime),"yyyy-MM-dd hh:mm:ss") + '：<strong>运行参数</strong>'+e.jobInfo['EXECUTOR_PARAMS'];
-            $('<p></p>').append(taskInfo).appendTo($target);
+            var $tr = $('<tr></tr>').append($('<td></td>').append(e.jobInfo['JOB_NAME']))
+                .append($('<td></td>').append(e.jobNameHander + '_' + e.jobId))
+                .append($('<td></td>').append(e.done ? '完成' : (e.cancel ? '取消' : '运行')))
+                .append($('<td></td>').append(date2str(new Date(e.callTime), "yyyy-MM-dd hh:mm:ss")))
+                .append($('<td></td>').append(e.jobInfo['EXECUTOR_PARAMS']))
+                .appendTo($tbody);
+            $tbody.append($tbody);
         });
+        $table.append($tbody).appendTo($target);
     });
 }
 
@@ -44,8 +50,12 @@ function showTaskInfo() {
 /// </summary>
 /// <param name="x">待显示的日期时间，例如new Date()</param>
 /// <param name="y">需要显示的格式，例如yyyy-MM-dd hh:mm:ss</param>
-function date2str(x,y) {
-    var z = {M:x.getMonth()+1,d:x.getDate(),h:x.getHours(),m:x.getMinutes(),s:x.getSeconds()};
-    y = y.replace(/(M+|d+|h+|m+|s+)/g,function(v) {return ((v.length>1?"0":"")+eval('z.'+v.slice(-1))).slice(-2)});
-    return y.replace(/(y+)/g,function(v) {return x.getFullYear().toString().slice(-v.length)});
+function date2str(x, y) {
+    var z = {M: x.getMonth() + 1, d: x.getDate(), h: x.getHours(), m: x.getMinutes(), s: x.getSeconds()};
+    y = y.replace(/(M+|d+|h+|m+|s+)/g, function (v) {
+        return ((v.length > 1 ? "0" : "") + eval('z.' + v.slice(-1))).slice(-2)
+    });
+    return y.replace(/(y+)/g, function (v) {
+        return x.getFullYear().toString().slice(-v.length)
+    });
 }
