@@ -3,14 +3,14 @@ $(document).ready(function () {
 });
 
 function getJobHandlerName() {
-    $.get("/executor/monitor/overview/jobHandlerNames").success(function (data) {
+    $.get("executor/monitor/overview/jobHandlerNames").success(function (data) {
         showWokerPool(data);
     });
 }
 
 function showWokerPool(data) {
     $.each(data, function (i, e) {
-        $.get('/executor/monitor/overview/' + e).success(function (workerPoolInfo) {
+        $.get('executor/monitor/overview/' + e).success(function (workerPoolInfo) {
             var poolInfo = e + '：正在运行' + workerPoolInfo.currentActive
                 + '：正在等待 ' + (workerPoolInfo.jobSize - workerPoolInfo.completedJobCount - workerPoolInfo.currentActive)
                 + '：总任务 ' + workerPoolInfo.jobSize
@@ -23,7 +23,7 @@ function showWokerPool(data) {
 
 function showTaskInfo() {
     var jobHandlerName = $(this).data('jobHandlerName');
-    $.get('/executor/monitor/listTaskInfoAllExsist/' + jobHandlerName).success(function (data) {
+    $.get('executor/monitor/listTaskInfoAllExsist/' + jobHandlerName).success(function (data) {
         console.log(data)
         var $target = $('.taskInfo').empty();
         if (data.length < 1) {
