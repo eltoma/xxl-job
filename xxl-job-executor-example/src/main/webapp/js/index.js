@@ -30,16 +30,22 @@ function showTaskInfo() {
             $('<p></p>').append("<strong>没有任务记录</strong>").appendTo($target);
             return;
         }
-        var $table = $('<table></table>').addClass('table').addClass('table-hover').append('<thead><tr><th>任务名称</th><th>任务标识</th><th>状态</th><th>提交时间</th><th>运行参数</th></tr></thead>');
+        var $table = $('<table></table>').addClass('table').addClass('table-hover')
+            .append('<thead><tr><th>任务名称</th><th>任务标识</th><th>状态</th><th>提交时间</th><th>运行参数</th></tr></thead>');
         var $tbody = $('<tbody></tbody>');
         $.each(data, function (i, e) {
             var $tr = $('<tr></tr>').append($('<td></td>').append(e.jobInfo['JOB_NAME']))
                 .append($('<td></td>').append(e.jobNameHander + '_' + e.jobId))
                 .append($('<td></td>').append(e.done ? '完成' : (e.cancel ? '取消' : '运行')))
                 .append($('<td></td>').append(date2str(new Date(e.callTime), "yyyy-MM-dd hh:mm:ss")))
-                .append($('<td></td>').append(e.jobInfo['EXECUTOR_PARAMS']))
-                .appendTo($tbody);
-            $tbody.append($tbody);
+                .append($('<td></td>').append(e.jobInfo['EXECUTOR_PARAMS']));
+            if(!e.done && !e.cancel){
+                $tr.addClass('success');
+            }
+            if(e.cancel){
+                $tr.addClass('danger');
+            }
+            $tbody.append($tr);
         });
         $table.append($tbody).appendTo($target);
     });
