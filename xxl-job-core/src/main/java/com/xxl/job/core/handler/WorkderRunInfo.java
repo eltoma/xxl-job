@@ -21,6 +21,7 @@ public class WorkderRunInfo implements Future<CallBack> {
     private String logId;
     private String callBackUrl;
     private String jobHandlerName;
+    private IJobKillHook jobKillHook;
     private Map<String, String> jobInfo;
     private Future<CallBack> callBackFuture;
 
@@ -66,6 +67,14 @@ public class WorkderRunInfo implements Future<CallBack> {
 
     public void setCallBackFuture(Future<CallBack> callBackFuture) {
         this.callBackFuture = callBackFuture;
+    }
+
+    public IJobKillHook getJobKillHook() {
+        return jobKillHook;
+    }
+
+    public void setJobKillHook(IJobKillHook jobKillHook) {
+        this.jobKillHook = jobKillHook;
     }
 
     @Override

@@ -20,7 +20,7 @@ public class Worker {
     private IJobHandler jobHandler;
     private Class<?> jobClass;
     private ThreadPoolExecutor executorService;
-    private Map<String, WorkderRunInfo> callBackFutureMap = new ConcurrentHashMap<>();
+    private static Map<String, WorkderRunInfo> callBackFutureMap = new ConcurrentHashMap<>();
 
     public Worker(String jobHandlerName, IJobHandler jobHandler, Class<?> jobClass) {
         this.jobHandlerName = jobHandlerName;
@@ -68,6 +68,9 @@ public class Worker {
             return;
         }
         if (!(callBackFuture.isDone() || callBackFuture.isCancelled())) {
+            if (callBackFuture.getJobKillHook() != null) {
+                callBackFuture.getJobKillHook().destroy();
+            }
             callBackFuture.cancel(true);
             HashMap<String, String> params = new HashMap<>();
             params.put("log_id", logId);
@@ -88,6 +91,20 @@ public class Worker {
             if (callBackFuture != null && (callBackFuture.isDone() || callBackFuture.isCancelled())) {
                 callBackFutureMap.remove(key);
             }
+        }
+    }
+
+
+    /**
+     * 注册job kill 动作
+     *
+     * @param jobId
+     * @param jobKillHook
+     */
+    public static void registerKillAction(String jobId, IJobKillHook jobKillHook) {
+        WorkderRunInfo workderRunInfo = callBackFutureMap.get(jobId);
+        if (workderRunInfo != null) {
+            workderRunInfo.setJobKillHook(jobKillHook);
         }
     }
 

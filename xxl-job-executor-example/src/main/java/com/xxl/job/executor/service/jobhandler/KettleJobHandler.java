@@ -1,6 +1,8 @@
 package com.xxl.job.executor.service.jobhandler;
 
 import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.handler.IJobKillHook;
+import com.xxl.job.core.handler.Worker;
 import com.xxl.job.core.handler.WorkerCallable;
 import com.xxl.job.core.handler.annotation.JobHander;
 import com.xxl.job.core.handler.annotation.JobHanderRepository;
@@ -128,11 +130,18 @@ public class KettleJobHandler extends IJobHandler {
         KettleEnvironment.init();
         // jobname 是Job脚本的路径及名称
         JobMeta jobMeta = new JobMeta(kettleJobParamAdvisor.getFilePath(), null);
-        Job job = new Job(null, jobMeta);
+        final Job job = new Job(null, jobMeta);
         // job.setVariable("id", params[0]);
         // job.setVariable("dt", params[1]);
         setVariable(job, kettleJobParamAdvisor.getVariableMap());
         job.start();
+        // 注册job关闭时，资源释放
+        Worker.registerKillAction(WorkerCallable.getLogId(), new IJobKillHook() {
+            @Override
+            public void destroy() {
+                job.stopAll();
+            }
+        });
         job.waitUntilFinished();
         Result result = job.getResult();
         // 获取kettle日志

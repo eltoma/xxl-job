@@ -1,6 +1,8 @@
 package com.xxl.job.executor.service.jobhandler;
 
 import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.handler.IJobKillHook;
+import com.xxl.job.core.handler.Worker;
 import com.xxl.job.core.handler.WorkerCallable;
 import com.xxl.job.core.handler.annotation.JobHander;
 import com.xxl.job.core.handler.annotation.JobHanderRepository;
@@ -100,7 +102,7 @@ public class KettleTransHandler extends IJobHandler {
         EnvUtil.environmentInit();
         TransMeta transMeta = new TransMeta(kettleJobParamAdvisor.getFilePath());
         transMeta.setCapturingStepPerformanceSnapShots(true);
-        Trans trans = new Trans(transMeta);
+        final Trans trans = new Trans(transMeta);
         trans.setMonitored(true);
         trans.setInitializing(true);
         trans.setPreparing(true);
@@ -111,6 +113,13 @@ public class KettleTransHandler extends IJobHandler {
         // trans.setVariable("stnlevel", "2");
         setVariable(trans, kettleJobParamAdvisor.getVariableMap());
         trans.execute(null);
+        // 注册job关闭时，资源释放
+        Worker.registerKillAction(WorkerCallable.getLogId(), new IJobKillHook() {
+            @Override
+            public void destroy() {
+                trans.stopAll();
+            }
+        });
         // 等待转换执行结束
         trans.waitUntilFinished();
         Result result = trans.getResult();
