@@ -9,10 +9,13 @@ import com.xxl.job.core.handler.annotation.JobHanderRepository;
 import com.xxl.job.core.util.CallBack;
 import com.xxl.job.executor.loader.dao.*;
 import com.xxl.job.executor.service.parser.KettleJobParamParser;
+import org.apache.log4j.Level;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.Result;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.logging.KettleLogStore;
+import org.pentaho.di.core.logging.KettleLoggingEvent;
+import org.pentaho.di.core.logging.KettleLoggingEventListener;
 import org.pentaho.di.core.util.EnvUtil;
 import org.pentaho.di.core.variables.VariableSpace;
 import org.pentaho.di.trans.Trans;
@@ -100,9 +103,31 @@ public class KettleTransHandler extends IJobHandler {
         // 初始化任务
         KettleEnvironment.init();
         EnvUtil.environmentInit();
+        final String logId = WorkerCallable.getLogId();
+        // 获取kettle日志
+        KettleLogStore.getAppender().addLoggingEventListener(new KettleLoggingEventListener() {
+            @Override
+            public void eventAdded(KettleLoggingEvent event) {
+                WorkerCallable.setLogId(logId);
+                String msg = event.getMessage().toString();
+                switch (event.getLevel()) {
+                    case ERROR:
+                        logger.error(msg);
+                        break;
+                    case DEBUG:
+                    case ROWLEVEL:
+                        logger.debug(msg);
+                        break;
+                    default:
+                        logger.info(msg);
+                        break;
+                }
+            }
+        });
         TransMeta transMeta = new TransMeta(kettleJobParamAdvisor.getFilePath());
         transMeta.setCapturingStepPerformanceSnapShots(true);
         final Trans trans = new Trans(transMeta);
+
         trans.setMonitored(true);
         trans.setInitializing(true);
         trans.setPreparing(true);
@@ -113,6 +138,7 @@ public class KettleTransHandler extends IJobHandler {
         // trans.setVariable("stnlevel", "2");
         setVariable(trans, kettleJobParamAdvisor.getVariableMap());
         trans.execute(null);
+        long batchId = trans.getBatchId();
         // 注册job关闭时，资源释放
         Worker.registerKillAction(WorkerCallable.getLogId(), new IJobKillHook() {
             @Override
@@ -120,19 +146,21 @@ public class KettleTransHandler extends IJobHandler {
                 trans.stopAll();
             }
         });
-        // 等待转换执行结束
-        trans.waitUntilFinished();
-        Result result = trans.getResult();
-        // 获取kettle日志
-        logger.info(KettleLogStore.getAppender().getBuffer().toString());
-        // 清理日志
-        KettleLogStore.getAppender().clear();
-        if (trans.getErrors() > 0) {
-            logger.error("[kettle Transformation]run error. {}", new Object[]{result == null ? "" : result.getLogText()});
-            return CallBack.failWithData(trans.getBatchId());
+        try {
+            // 等待转换执行结束
+            trans.waitUntilFinished();
+            Result result = trans.getResult();
+            if (trans.getErrors() > 0) {
+                logger.error("[kettle Transformation]run error. {}", new Object[]{result == null ? "" : result.getLogText()});
+                return CallBack.failWithData(batchId);
+            }
+            logger.info("[kettle Transformation]run info. {}", new Object[]{result == null ? "" : result.getLogText()});
+            return CallBack.successWithData(batchId);
+        } catch (Exception e) {
+            logger.error("Kettle Transformation error.", e);
+            return CallBack.failWithData(batchId);
         }
-        logger.info("[kettle Transformation]run info. {}", new Object[]{result == null ? "" : result.getLogText()});
-        return CallBack.successWithData(trans.getBatchId());
+
     }
 
 

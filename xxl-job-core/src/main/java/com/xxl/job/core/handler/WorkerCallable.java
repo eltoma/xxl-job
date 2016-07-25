@@ -92,4 +92,15 @@ public class WorkerCallable implements Callable<CallBack> {
         return logId.get();
     }
 
+    /**
+     * 设置LogId
+     *
+     * @param logIdStr
+     * @return
+     */
+    public static String setLogId(String logIdStr) {
+        logId.set(logIdStr);
+        return logIdStr;
+    }
+
 }

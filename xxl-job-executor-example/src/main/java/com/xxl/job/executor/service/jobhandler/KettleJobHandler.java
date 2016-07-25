@@ -9,10 +9,13 @@ import com.xxl.job.core.handler.annotation.JobHanderRepository;
 import com.xxl.job.core.util.CallBack;
 import com.xxl.job.executor.loader.dao.*;
 import com.xxl.job.executor.service.parser.KettleJobParamParser;
+import org.apache.log4j.Level;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.Result;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.logging.KettleLogStore;
+import org.pentaho.di.core.logging.KettleLoggingEvent;
+import org.pentaho.di.core.logging.KettleLoggingEventListener;
 import org.pentaho.di.core.variables.VariableSpace;
 import org.pentaho.di.job.Job;
 import org.pentaho.di.job.JobMeta;
@@ -33,7 +36,6 @@ public class KettleJobHandler extends IJobHandler {
 
     private final static String FILE_SUFFIX_JOB = "kjb";
     private static transient Logger logger = LoggerFactory.getLogger(KettleJobHandler.class);
-
 
     @Autowired
     private LogKettleJobMapper logKettleJobMapper;
@@ -128,6 +130,27 @@ public class KettleJobHandler extends IJobHandler {
      */
     public CallBack runJob(KettleJobParamParser kettleJobParamAdvisor) throws KettleException {
         KettleEnvironment.init();
+        final String logId = WorkerCallable.getLogId();
+        // 获取kettle日志
+        KettleLogStore.getAppender().addLoggingEventListener(new KettleLoggingEventListener() {
+            @Override
+            public void eventAdded(KettleLoggingEvent event) {
+                WorkerCallable.setLogId(logId);
+                String msg = event.getMessage().toString();
+                switch (event.getLevel()) {
+                    case ERROR:
+                        logger.error(msg);
+                        break;
+                    case DEBUG:
+                    case ROWLEVEL:
+                        logger.debug(msg);
+                        break;
+                    default:
+                        logger.info(msg);
+                        break;
+                }
+            }
+        });
         // jobname 是Job脚本的路径及名称
         JobMeta jobMeta = new JobMeta(kettleJobParamAdvisor.getFilePath(), null);
         final Job job = new Job(null, jobMeta);
@@ -135,6 +158,7 @@ public class KettleJobHandler extends IJobHandler {
         // job.setVariable("dt", params[1]);
         setVariable(job, kettleJobParamAdvisor.getVariableMap());
         job.start();
+        long batchId = job.getBatchId();
         // 注册job关闭时，资源释放
         Worker.registerKillAction(WorkerCallable.getLogId(), new IJobKillHook() {
             @Override
@@ -142,23 +166,29 @@ public class KettleJobHandler extends IJobHandler {
                 job.stopAll();
             }
         });
-        job.waitUntilFinished();
-        Result result = job.getResult();
-        // 获取kettle日志
-        logger.info(KettleLogStore.getAppender().getBuffer().toString());
-        // 清理日志
-        KettleLogStore.getAppender().clear();
-        if (job.getErrors() > 0) {
-            logger.error("[kettle Transformation]run error. {}", new Object[]{result == null ? "" : result.getLogText()});
-            return CallBack.failWithData(job.getBatchId());
+        try {
+            job.waitUntilFinished();
+            Result result = job.getResult();
+
+            // 获取kettle日志
+//        logger.info(KettleLogStore.getAppender().getBuffer().toString());
+            // 清理日志
+//        KettleLogStore.getAppender().clear();
+            if (job.getErrors() > 0) {
+                logger.error("[kettle job]run error. {}", new Object[]{result == null ? "" : result.getLogText()});
+                return CallBack.failWithData(job.getBatchId());
+            }
+            logger.info("[kettle job]run info. {}", new Object[]{result == null ? "" : result.getLogText()});
+            // Now the job task is finished, mark it as finished.
+            job.setFinished(true);
+            // Cleanup the parameters used by the job. Post that readLog GC.
+            jobMeta.eraseParameters();
+            job.eraseParameters();
+            return CallBack.successWithData(batchId);
+        } catch (Exception e) {
+            logger.error("Kettle job error.", e);
+            return CallBack.failWithData(batchId);
         }
-        logger.info("[kettle Transformation]run info. {}", new Object[]{result == null ? "" : result.getLogText()});
-        // Now the job task is finished, mark it as finished.
-        job.setFinished(true);
-        // Cleanup the parameters used by the job. Post that readLog GC.
-        jobMeta.eraseParameters();
-        job.eraseParameters();
-        return CallBack.successWithData(job.getBatchId());
     }
 
     public VariableSpace setVariable(VariableSpace variableSpace, Map<String, String> variableMap) {
