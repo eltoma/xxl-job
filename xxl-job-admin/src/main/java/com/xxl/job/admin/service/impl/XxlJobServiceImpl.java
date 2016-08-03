@@ -12,6 +12,8 @@ import com.xxl.job.admin.service.IXxlJobService;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.CronExpression;
 import org.quartz.SchedulerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -26,6 +28,8 @@ import java.util.Map;
  */
 @Service
 public class XxlJobServiceImpl implements IXxlJobService {
+
+    private static transient Logger logger = LoggerFactory.getLogger(XxlJobServiceImpl.class);
 
     @Resource
     private IXxlJobInfoDao xxlJobInfoDao;
@@ -237,4 +241,18 @@ public class XxlJobServiceImpl implements IXxlJobService {
         }
     }
 
+    @Override
+    public ReturnT<String> reimportJob() {
+        List<XxlJobInfo> jobInfos = xxlJobInfoDao.findAll();
+        for (XxlJobInfo jobInfo : jobInfos) {
+            try {
+                // add job 2 quartz
+                boolean result = DynamicSchedulerUtil.addOrRescheduleJob(jobInfo);
+                logger.info("[reimport job]{}: {}", new Object[]{result, jobInfo.getJobGroup() + jobInfo.getJobName()});
+            } catch (SchedulerException e) {
+                e.printStackTrace();
+            }
+        }
+        return ReturnT.SUCCESS;
+    }
 }

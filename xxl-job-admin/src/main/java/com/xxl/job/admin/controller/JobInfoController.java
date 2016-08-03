@@ -84,5 +84,12 @@ public class JobInfoController {
 	public ReturnT<String> triggerJob(String jobGroup, String jobName) {
 		return xxlJobService.triggerJob(jobGroup, jobName);
 	}
+
+	@RequestMapping("/reimport")
+	@ResponseBody
+	public ReturnT<String> reimportJob() {
+		return xxlJobService.reimportJob();
+	}
+
 	
 }

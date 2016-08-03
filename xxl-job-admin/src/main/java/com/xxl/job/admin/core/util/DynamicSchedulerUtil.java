@@ -201,6 +201,13 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
         return true;
     }
 
+    public static boolean addOrRescheduleJob(XxlJobInfo jobInfo) throws SchedulerException {
+        if (checkExists(jobInfo.getJobName(), jobInfo.getJobGroup())) {
+            return rescheduleJob(jobInfo);
+        }
+        return addJob(jobInfo);
+    }
+
     // reschedule
     public static boolean rescheduleJob(XxlJobInfo jobInfo) throws SchedulerException {
 
