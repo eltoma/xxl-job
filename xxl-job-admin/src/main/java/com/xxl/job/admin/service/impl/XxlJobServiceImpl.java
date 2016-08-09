@@ -171,6 +171,9 @@ public class XxlJobServiceImpl implements IXxlJobService {
         }
 
         XxlJobInfo jobInfo = xxlJobInfoDao.load(jobGroup, jobName);
+        // 如果类型从cron切换到未计划的，或者从未计划的，切换到cron的，都需要重建qurtz的信息
+        boolean isRebuild = (StringUtils.isBlank(jobInfo.getJobCron()) && StringUtils.isNotBlank(jobCron))
+                || (StringUtils.isNotBlank(jobInfo.getJobCron()) && StringUtils.isBlank(jobCron));
         jobInfo.setJobCron(jobCron);
         jobInfo.setJobDesc(jobDesc);
         jobInfo.setAuthor(author);
@@ -182,8 +185,13 @@ public class XxlJobServiceImpl implements IXxlJobService {
         jobInfo.setExecutorParam(executorParam);
 
         try {
-            // fresh quartz
-            DynamicSchedulerUtil.rescheduleJob(jobInfo);
+            if (isRebuild) {
+                DynamicSchedulerUtil.removeJob(jobInfo.getJobGroup(), jobInfo.getJobName());
+                DynamicSchedulerUtil.addJob(jobInfo);
+            } else {
+                // fresh quartz
+                DynamicSchedulerUtil.rescheduleJob(jobInfo);
+            }
 
             // fresh db
             xxlJobInfoDao.update(jobInfo);
