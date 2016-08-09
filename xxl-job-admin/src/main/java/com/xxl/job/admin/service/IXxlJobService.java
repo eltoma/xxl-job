@@ -33,7 +33,8 @@ public interface IXxlJobService {
     /**
      * 不推荐使用：重新导入job
      *
+     * @param rebuild true时，删除再重建;默认为true
      * @return
      */
-    ReturnT<String> reimportJob();
+    ReturnT<String> reimportJob(boolean rebuild);
 }

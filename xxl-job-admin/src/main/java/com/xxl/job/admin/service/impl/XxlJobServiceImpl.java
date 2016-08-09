@@ -242,12 +242,18 @@ public class XxlJobServiceImpl implements IXxlJobService {
     }
 
     @Override
-    public ReturnT<String> reimportJob() {
+    public ReturnT<String> reimportJob(boolean rebuild) {
         List<XxlJobInfo> jobInfos = xxlJobInfoDao.findAll();
         for (XxlJobInfo jobInfo : jobInfos) {
             try {
                 // add job 2 quartz
-                boolean result = DynamicSchedulerUtil.addOrRescheduleJob(jobInfo);
+                boolean result;
+                if (rebuild) {
+                    DynamicSchedulerUtil.removeJob(jobInfo.getJobGroup(), jobInfo.getJobName());
+                    result = DynamicSchedulerUtil.addJob(jobInfo);
+                } else {
+                    result = DynamicSchedulerUtil.addOrRescheduleJob(jobInfo);
+                }
                 logger.info("[reimport job]{}: {}", new Object[]{result, jobInfo.getJobGroup() + jobInfo.getJobName()});
             } catch (SchedulerException e) {
                 e.printStackTrace();

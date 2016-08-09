@@ -55,12 +55,6 @@
                     <artifactId>metastore</artifactId>
                     <version>${pentaho.kettle.version}</version>
                 </dependency>
-                <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
-                <dependency>
-                    <groupId>org.apache.poi</groupId>
-                    <artifactId>poi</artifactId>
-                    <version>3.7</version>
-                </dependency>
                 <dependency>
                     <groupId>com.enterprisedt</groupId>
                     <artifactId>edtftpj</artifactId>
@@ -126,12 +120,12 @@
                 <repository>
                     <id>pentaho-public-release-repos</id>
                     <name>pentaho-public-release-repos</name>
-                    <url>http://repository.pentaho.org/content/repositories/pentaho-public-release-repos/</url>
+                    <url>http://repository.pentaho.org/content/repositories/omni/</url>
                 </repository>
                 <repository>
-                    <id>proxied-3rd-party-releases</id>
-                    <name>proxied-3rd-party-releases</name>
-                    <url>http://repository.pentaho.org/content/repositories/proxied-3rd-party-releases/</url>
+                    <id>pentaho-public-release-repos2</id>
+                    <name>pentaho-public-release-repos2</name>
+                    <url>http://repository.pentaho.org/artifactory/repo</url>
                 </repository>
                 <repository>
                     <id>mvnrepository</id>
